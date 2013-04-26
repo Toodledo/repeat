@@ -1,4 +1,4 @@
-<?
+<?php
 
 //converts our repeat strings into iCal RRULEs
 function icalRepeatAdvanced($text) {
@@ -8,10 +8,11 @@ function icalRepeatAdvanced($text) {
 	$every = strpos($text,'every');
 	$each = strpos($text,'each');
 	
-	if(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)) { //Every ...
-		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);
-		if(empty($match[1])) $match[1] = 1;
-		if(empty($match[2])) return "";
+	if(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
+	
+		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);		
+		if(empty($match[1])) $match[1] = 1;	// X
+		if(empty($match[2])) return "";		// T
 			
 		$repeat = "WEEKLY;BYDAY=";
 		$and = '';
@@ -33,6 +34,8 @@ function icalRepeatAdvanced($text) {
 		
 		if(strpos($match[2],'weekday')!==FALSE) $repeat = "WEEKLY;BYDAY=MO,TU,WE,TH,FR";
 		else if(strpos($match[2],'weekend')!==FALSE) $repeat = "WEEKLY;BYDAY=SU,SA";
+		
+		$repeat = "FREQ=" . $repeat;
 		
 	} else { //on the ...
 		
@@ -109,6 +112,5 @@ function iCalReverseRepeat($freq, $interval, $byday) {
 	
 	return $ret;
 }
-
 
 ?>
