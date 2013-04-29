@@ -1,5 +1,34 @@
 <?php
 
+require_once 'When.php';	// Include When library	
+
+function getNextDates($start,$due,$comp,$rrule)		
+{
+    $newstart = new When();
+    $newdue = new When();
+
+    $match = array();
+    preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
+    $fromComp = !empty($match[1]);
+    
+    if($fromComp && !empty($comp))  // FLAG: From Completion
+    {   
+        $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+        
+        $newstart = clone $comp;
+        $newdue = $comp->add( $start->diff($due) );
+    }
+    else
+    {
+        $newstart->recur($start)->rrule($rrule);//->next();        
+        $newstart = $newstart->next();        
+        $ns = clone $newstart;        
+        $newdue = $ns->add( $start->diff($due));
+    }            
+    
+    return array($newstart,$newdue,$rrule);
+} 
+
 //converts our repeat strings into iCal RRULEs
 function icalRepeatAdvanced($text) {
 	$repeat = '';
@@ -63,7 +92,7 @@ function icalRepeatAdvanced($text) {
 			
 		if($num>5) $num=-1;
 		
-		$repeat = "MONTHLY;BYDAY=".$num.$day;
+		$repeat = "FREQ=MONTHLY;BYDAY=".$num.$day;
 	}
 	
 	return $repeat;
