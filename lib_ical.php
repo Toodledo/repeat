@@ -4,8 +4,11 @@ require_once 'When.php';	// Include When library
 
 function getNextDates($start,$due,$comp,$rrule)		
 {
-    $newstart = new When();
-    $newdue = new When();
+    $rs = new When();
+    $rd = new When();
+            
+    $newstart = null;
+    $newdue = null;
 
     $match = array();
     preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
@@ -20,17 +23,29 @@ function getNextDates($start,$due,$comp,$rrule)
     }
     else
     {
-        $newstart->recur($start)->rrule($rrule);//->next();        
-        $newstart = $newstart->next();        
+        $rs->recur($start)->rrule($rrule);//->next(); 
+        
+        $a = $rs->next();
+        $newstart = clone $a;
+        $newdue = clone $newstart;
+        $newdue->add( $start->diff($due));
+        
         $ns = clone $newstart;        
-        $newdue = $ns->add( $start->diff($due));
+        while( true )
+        {
+            if( $ns instanceof When)
+                break;;
+                
+            echo $ns->format("m/d/Y") . "<br/>";
+            $ns = $rs->next();
+        }        
     }            
     
     return array($newstart,$newdue,$rrule);
 } 
 
 //converts our repeat strings into iCal RRULEs
-function icalRepeatAdvanced($text) {
+function convertToRRule($text, $fromcomp) {
 	$repeat = '';
 	$text = trim(strtolower($text));
 	
