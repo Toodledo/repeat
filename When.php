@@ -591,7 +591,7 @@ class When
 		{
 			$_mdays = range(1, date('t',mktime(0,0,0,$month,1,$year)));
 			foreach($_mdays as $_mday)
-			{
+			{   
 				$date_time = new DateTime($year . '-' . $month . '-' . $_mday . ' ' . $timestamp);
 				
 				// get the week of the month (1, 2, 3, 4, 5, etc)

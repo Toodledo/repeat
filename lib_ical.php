@@ -9,37 +9,87 @@ function getNextDates($start,$due,$comp,$rrule)
             
     $newstart = null;
     $newdue = null;
+    $newrrule = $rrule;
 
     $match = array();
     preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
-    $fromComp = !empty($match[1]);
+    $fromComp = !empty($match[1]) && !empty($comp);    
     
-    if($fromComp && !empty($comp))  // FLAG: From Completion
-    {   
-        $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+    // Calculate START date
+    if( $start === 0)
+    {
+        $newstart = 0;
+    }
+    else   
+    {
+        if($fromComp)  // FLAG: From Completion
+        {               
+            $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+            $newstart = clone $comp;            
+        }        
+        else
+        {
+            $rs->recur($start)->rrule($rrule)->next(); 
+            
+            $d = $rs->next();
+            
+            
+            echo "<br/>";
+            echo "<br/>";
+            echo "<br/>";
+            
+            echo $rrule . "<br />";
+            echo $d->format("m/d/Y");
+            
+            echo "<br/>";
+            echo "<br/>";
+            echo "<br/>";
+            
+            $newstart = clone $d;
+        }
+    }
         
-        $newstart = clone $comp;
-        $newdue = $comp->add( $start->diff($due) );
+    // Calculate DUE date
+    if( $due === 0)
+    {
+        $newdue = 0;
     }
     else
     {
-        $rs->recur($start)->rrule($rrule);//->next(); 
-        
-        $a = $rs->next();
-        $newstart = clone $a;
-        $newdue = clone $newstart;
-        $newdue->add( $start->diff($due));
-        
-        $ns = clone $newstart;        
-        while( true )
+        if($start === 0)
         {
-            if( $ns instanceof When)
-                break;;
-                
-            echo $ns->format("m/d/Y") . "<br/>";
-            $ns = $rs->next();
-        }        
-    }            
+            $rd->recur($due)->rrule($rrule);
+            
+            $d = $rd->next();            
+            $d = $rd->next();
+            
+            $newdue = clone $d;
+        }
+        else
+        {
+            if($fromComp)
+            {
+                $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+                $newdue = $comp->add($start->diff($due));
+            }
+            else
+            {
+                $newdue = clone $newstart;
+                $newdue->add( $start->diff($due));
+            }
+        }
+    }   
+ 
+        
+//        $ns = clone $newstart;        
+//        while( true )
+//        {
+//            if( $ns instanceof When)
+//                break;;
+//                
+//            echo $ns->format("m/d/Y") . "<br/>";
+//            $ns = $rs->next();
+//        }      
     
     return array($newstart,$newdue,$rrule);
 } 
@@ -110,6 +160,8 @@ function convertToRRule($text, $fromcomp) {
 		$repeat = "FREQ=MONTHLY;BYDAY=".$num.$day;
 	}
 	
+        if($fromcomp) $repeat.=";FROMCOMP;";
+        
 	return $repeat;
 }
 

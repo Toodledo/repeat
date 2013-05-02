@@ -3,7 +3,7 @@
     require_once 'lib_ical.php';    
     
     // Get rrule string
-    $rr = icalRepeatAdvanced("Every Fri");	
+    $rr = convertToRRule("Every 2 months", false);	
 
     echo $rr;
     echo "<br/>";        
@@ -19,7 +19,7 @@
     echo "<br />";
     
     
-    $newDates = getNextDates( $start, $due, $comp, $rr.=";UNTIL=20130131T090000Z" );
+    $newDates = getNextDates( $start, $due, $comp, $rr );
         
     echo $newDates[0]->format("m/d/Y");
     echo "<br />";
