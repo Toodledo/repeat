@@ -1,8 +1,5 @@
 <?php
 
-    require_once 'PHPUnit/Autoload.php';
-    require_once '../lib_ical.php';
-
     class RepeatTest extends PHPUnit_Framework_TestCase
     {	
         /*
@@ -17,6 +14,17 @@
 
             $this->assertEquals( $ical, $converted );
         }	
+
+		public function testEveryNWeek()
+        {
+            $repeat = "Every 2 weeks";
+            $ical = "FREQ=WEEKLY;INTERVAL=2";
+
+            $converted = convertToRRule($repeat,false);
+
+            $this->assertEquals( $ical, $converted );
+        }	
+
 
         public function testEveryNMonth()
         {
@@ -65,6 +73,66 @@
             $this->assertEquals( $ical, $converted );            
         }
         
+        public function testDayOfMonthWordy()
+        {            
+            $repeat = "On the first monday of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=1MO';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the second tues of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=2TU';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the third wed of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=3WE';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the fourth thursday of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=4TH';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted ); 
+            
+            $repeat = "On the last thursday of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=-1TH';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );             
+        }
+        
+         public function testDayOfMonthOrdinal()
+        {            
+            $repeat = "On the 1st monday of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=1MO';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the 2nd tues of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=2TU';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the 3rd wed of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=3WE';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+            
+            $repeat = "On the 4th thursday of each month";
+            $ical = 'FREQ=MONTHLY;BYDAY=4TH';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );          
+        }
+        
         public function testEveryX()
         {            
             $repeat = "Every monday";
@@ -91,5 +159,25 @@
             $converted = convertToRRule($repeat,false);
             $this->assertEquals( $ical, $converted );
         }
+        
+        /*
+        public function testParent()
+        {            
+            $repeat = "With Parent";
+            $ical = 'PARENT';
+            
+            $converted = convertToRRule($repeat,true);
+            $this->assertEquals( $ical, $converted );
+        }
+        
+        public function testComp()
+        {            
+            $repeat = "Every monday";
+            $ical = 'FREQ=WEEKLY;BYDAY=MO;FROMCOMP';
+            
+            $converted = convertToRRule($repeat,true);
+            $this->assertEquals( $ical, $converted );
+        }
+        */
     }
 ?>

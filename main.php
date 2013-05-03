@@ -13,16 +13,16 @@
 
     $comp = new DateTime('January 3, 2013');
     
-    echo $start->format("m/d/Y");
+    echo "start: ".$start->format("m/d/Y");
     echo "<br />";
-    echo $due->format("m/d/Y");
+    echo "due: ".$due->format("m/d/Y");
     echo "<br />";
     
     
     $newDates = getNextDates( $start, $due, $comp, $rr );
         
-    echo $newDates[0]->format("m/d/Y");
+    echo "new start: ".$newDates[0]->format("m/d/Y");
     echo "<br />";
-    echo $newDates[1]->format("m/d/Y");
+    echo "new due: ".$newDates[1]->format("m/d/Y");
 
 ?>
