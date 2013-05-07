@@ -29,22 +29,22 @@ function getNextDates($start,$due,$comp,$rrule)
         }        
         else
         {
-            $rs->recur($start)->rrule($rrule)->next(); 
-            
+            $rs->recur($start)->rrule($rrule);
             $d = $rs->next();
-            
-            
-            echo "<br/>";
-            echo "<br/>";
-            echo "<br/>";
-            
-            echo $rrule . "<br />";
-            echo $d->format("m/d/Y");
-            
-            echo "<br/>";
-            echo "<br/>";
-            echo "<br/>";
-            
+            $d = $rs->next();			
+
+            // No next occuraence
+            if( !( $d instanceof DateTime) )
+            {
+            	return [-1,-1,""];
+            }
+
+            // No next occurence after returned one
+            if( !( $rs->next() instanceof DateTime ) )
+            {
+            	$newrrule = "";
+            }
+
             $newstart = clone $d;
         }
     }
@@ -59,9 +59,20 @@ function getNextDates($start,$due,$comp,$rrule)
         if($start === 0)
         {
             $rd->recur($due)->rrule($rrule);
-            
-            $d = $rd->next();            
             $d = $rd->next();
+            $d = $rd->next();
+
+    		// No next occuraence
+            if( !( $d instanceof DateTime) )
+            {
+            	return [-1,-1,""];
+            }
+
+            // No next occurence after returned one
+            if( !( $rd->next() instanceof DateTime ) )
+            {
+            	$newrrule = "";
+            }
             
             $newdue = clone $d;
         }
@@ -91,7 +102,7 @@ function getNextDates($start,$due,$comp,$rrule)
 //            $ns = $rs->next();
 //        }      
     
-    return array($newstart,$newdue,$rrule);
+    return array($newstart,$newdue,$newrrule);
 } 
 
 //converts our repeat strings into iCal RRULEs
