@@ -1,20 +1,20 @@
 <?php
 
-    require_once 'PHPUnit/Autoload.php';
-    require_once '../lib_ical.php';
+    //require_once 'PHPUnit/Autoload.php';
+    //require_once '../lib_ical.php';
 
-    class RepeatTest extends PHPUnit_Framework_TestCase
+    class RepeatTest2 extends PHPUnit_Framework_TestCase
     {	       
         /*
          *  SECTION: GetNextDates()
          */
-        public function test_SimpleDailyFromDue()
+        public function test_SimpleDaily_FromDue()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
 
             $start = 0;
             $due = new DateTime("January 1, 2013");
-            $comp = 0;			
+            $comp = 0;          
 
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
@@ -26,13 +26,13 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_SimpleMonthlyFromDue()
+        public function test_SimpleMonthly_FromDue()
         {
             $ical = "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=1";
 
             $start = 0;
             $due = new DateTime("January 1, 2013");
-            $comp = 0;			
+            $comp = 0;          
 
             $newstart = 0;
             $newdue = new DateTime("March 1, 2013");
@@ -44,7 +44,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_SimpleYearlyFromDue()
+        public function test_SimpleYearly_FromDue()
         {
             $ical = "FREQ=YEARLY;INTERVAL=2";
 
@@ -62,7 +62,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_SimpleDailyFromStart()
+        public function test_SimpleDaily_FromStart()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
 
@@ -80,7 +80,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_SimpleMonthlyFromStart()
+        public function test_SimpleMonthly_FromStart()
         {
             $ical = "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=1";
             
@@ -98,7 +98,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_SimpleYearlyFromStart()
+        public function test_SimpleYearly_FromStart()
         {
             $ical = "FREQ=YEARLY;INTERVAL=2";
 
