@@ -5,24 +5,43 @@
     // Get rrule string
     $rr = convertToRRule("Every 2 months", false);	
 
-    echo $rr;
-    echo "<br/>";        
+    // Until Jan. 30, 2013
+    $rr = "FREQ=WEEKLY;UNTIL=20130130T000000Z";
 
-    $start = new DateTime( 'January 1, 2013' ); 
-    $due = new DateTime('January 5, 2013');
+    echo $rr;
+    echo "<br/>";
+
+    $start = new DateTime( 'January 21, 2013' ); 
+    $due = new DateTime('January 22, 2013');
 
     $comp = new DateTime('January 3, 2013');
     
     echo "start: ".$start->format("m/d/Y");
     echo "<br />";
     echo "due: ".$due->format("m/d/Y");
-    echo "<br />";
-    
+    echo "<br />";    
     
     $newDates = getNextDates( $start, $due, $comp, $rr );
-        
-    echo "new start: ".$newDates[0]->format("m/d/Y");
-    echo "<br />";
-    echo "new due: ".$newDates[1]->format("m/d/Y");
+
+    if( $newDates[0] === -1 )
+    {
+        echo "No next occurrence.";
+    }
+    else
+    {
+        echo "new start: ".$newDates[0]->format("m/d/Y");
+        echo "<br />";
+        echo "new due: ".$newDates[1]->format("m/d/Y");
+        echo "<br />";       
+
+        if( $newDates[2] == "" )
+        {
+            echo "No next occurrence.";
+        }
+        else
+        {
+            echo $newDates[2];
+        }
+    }
 
 ?>

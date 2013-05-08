@@ -1,7 +1,7 @@
 <?php
 
-    //require_once 'PHPUnit/Autoload.php';
-    //require_once '../lib_ical.php';
+    require_once 'PHPUnit/Autoload.php';
+    require_once '../lib_ical.php';
 
     class RepeatTest2 extends PHPUnit_Framework_TestCase
     {	       
@@ -14,7 +14,7 @@
 
             $start = 0;
             $due = new DateTime("January 1, 2013");
-            $comp = 0;          
+            $comp = 0;
 
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
@@ -116,7 +116,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_DailyUntil_NoNextOccurence()
+        public function test_DailyUntil_NoNextOccurrence()
         {
             // Repeat until Jan. 2, 2013
             $ical = "FREQ=DAILY;UNTIL=20130101T000000Z";
@@ -136,7 +136,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_WeeklyUntil_NoNextOccurence()
+        public function test_WeeklyUntil_NoNextOccurrence()
         {
             // Repeat until Jan. 30, 2013
             $ical = "FREQ=WEEKLY;UNTIL=20130130T000000Z";
@@ -156,7 +156,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_YearlyUntil_NoNextOccurence()
+        public function test_YearlyUntil_NoNextOccurrence()
         {
             // Repeat until Jan. 1, 2014
             $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
@@ -176,7 +176,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_DailyUntil_LastOccurence()
+        public function test_DailyUntil_LastOccurrence()
         {
             // Repeat until Jan. 2, 2013
             $ical = "FREQ=DAILY;UNTIL=20130102T000000Z";
@@ -196,7 +196,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_WeeklyUntil_LastOccurence()
+        public function test_WeeklyUntil_LastOccurrence()
         {
             // Repeat until Jan. 30, 2013
             $ical = "FREQ=WEEKLY;UNTIL=20130130T000000Z";
@@ -216,7 +216,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_YearlyUntil_LastOccurence()
+        public function test_YearlyUntil_LastOccurrence()
         {
             // Repeat until Jan. 1, 2014
             $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
