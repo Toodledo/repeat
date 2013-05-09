@@ -4,10 +4,7 @@
     require_once '../lib_ical.php';
 
     class RepeatTest2 extends PHPUnit_Framework_TestCase
-    {	       
-        /*
-         *  SECTION: GetNextDates()
-         */
+    {
         public function test_SimpleDaily_FromDue()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
@@ -26,6 +23,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
+        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
         public function test_SimpleMonthly_FromDue()
         {
             $ical = "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=1";
@@ -80,6 +78,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
+        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
         public function test_SimpleMonthly_FromStart()
         {
             $ical = "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=1";
@@ -228,6 +227,84 @@
             $newstart = new DateTime("January 1, 2014");
             $newdue = new DateTime("January 2, 2014");
             $newical = '';
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+
+        public function test_FromCompletion_Daily()
+        {
+            $ical = "FREQ=DAILY;INTERVAL=1;FROMCOMP";
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = new DateTime("January 5, 2013");
+            $newdue = new DateTime("January 6, 2013");  
+            $newical = $ical;
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        // TODO: Fix when Monthly works, remove BYMONTHDAY=5
+        public function test_FromCompletion_Monthly()
+        {
+            $ical = "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=5;FROMCOMP";
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = new DateTime("February 4, 2013");
+            $newdue = new DateTime("February 5, 2013");
+            $newical = $ical;
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_FromCompletion_Weekly()
+        {
+            $ical = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = new DateTime("January 11, 2013");
+            $newdue = new DateTime("January 12, 2013");
+            $newical = $ical;
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_FromCompletion_Yearly()
+        {
+            $ical = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = new DateTime("January 11, 2013");
+            $newdue = new DateTime("January 12, 2013");
+            $newical = $ical;
 
             $array = getNextDates($start,$due,$comp,$ical);
 

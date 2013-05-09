@@ -6,14 +6,33 @@ function getNextDates($start,$due,$comp,$rrule)
 {
     $rs = new When();
     $rd = new When();
+    $rc = new When();
             
     $newstart = null;
     $newdue = null;
     $newrrule = $rrule;
 
+    // Optional Rules
+    $fromComp = false;
+    $fastFoward = false;    
+
     $match = array();
     preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
     $fromComp = !empty($match[1]) && !empty($comp);    
+
+    $match = array();
+    preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
+    $fastFoward = !empty($match[1]);    
+
+    if( $fromComp )
+    {
+		$rrule = preg_replace("/FROMCOMP[;]?/i", "", $newrrule);
+    }
+
+    if( $fastFoward )
+    {
+		$rrule = preg_replace("/FASTFORWARD[;]?/i", "", $newrrule);
+    }
     
     // Calculate START date
     if( $start === 0)
@@ -23,9 +42,8 @@ function getNextDates($start,$due,$comp,$rrule)
     else   
     {
         if($fromComp)  // FLAG: From Completion
-        {               
-            $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
-            $newstart = clone $comp;            
+        {
+        	// Lazy calculate based on new due date calculation below
         }        
         else
         {
@@ -80,13 +98,19 @@ function getNextDates($start,$due,$comp,$rrule)
         {
             if($fromComp)
             {
-                $newrrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
-                $newdue = $comp->add($start->diff($due));
+            	$rc->recur($comp)->rrule($rrule);
+				$d = $rc->next();
+				$d = $rc->next();
+
+				$newdue = $d;
+
+				$newstart = clone $newdue;
+				$newstart->sub($start->diff($due));
             }
             else
             {
                 $newdue = clone $newstart;
-                $newdue->add( $start->diff($due));
+                $newdue->add($start->diff($due));
             }
         }
     }   
