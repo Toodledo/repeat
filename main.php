@@ -3,8 +3,8 @@
     require_once 'lib_ical.php';    
     
     // Get rrule string
-    $rr = convertToRRule("Every Year", true);
-    $rr = "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=1;FROMCOMP";	
+    $rr = convertToRRule("Every Week", true);
+    $rr = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";	
 
     echo $rr;
     echo "<br/>";
@@ -18,6 +18,8 @@
     echo "<br />";    
     echo "comp: ".$comp->format("m/d/Y");
     echo "<br />";    
+
+    //$due = 0;
     
     $newDates = getNextDates( $start, $due, $comp, $rr );
 
@@ -27,6 +29,8 @@
     }
     else
     {
+        //echo $newDates[0] === null ? "true" : "false";
+
         echo "new start: ".$newDates[0]->format("m/d/Y");
         echo "<br />";
         echo "new due: ".$newDates[1]->format("m/d/Y");

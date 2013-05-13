@@ -312,5 +312,45 @@
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $newical, $array[2] );
         }
+
+        public function test_FromCompletion_Yearly_WithoutStart()
+        {
+            $ical = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";
+
+            $start = 0;
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = 0;
+            $newdue = new DateTime("January 12, 2013");
+            $newical = $ical;
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_FastFoward_Daily()
+        {
+            // $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD";
+
+            // TODO: Calculate tomorrow
+
+            // $start = 0;
+            // $due = new DateTime("January 2, 2013");
+            // $comp = new DateTime("January 10, 2013");
+
+            // $newstart = 0;   
+            // $newdue = $tomorrow;
+            // $newical = $ical;
+
+            // $array = getNextDates($start,$due,$comp,$ical);
+
+            // $this->assertEquals( $newstart, $array[0] );
+            // $this->assertEquals( $newdue, $array[1] );
+            // $this->assertEquals( $newical, $array[2] );
+        }
     }
 ?>

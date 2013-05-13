@@ -7,10 +7,13 @@ function getNextDates($start,$due,$comp,$rrule)
     $rs = new When();
     $rd = new When();
     $rc = new When();
+    $noNextOccur = [-1,-1,""];
             
     $newstart = null;
     $newdue = null;
     $newrrule = $rrule;
+
+    $today = new DateTime(date('Y-m-d H:i:s'));
 
     // Optional Rules
     $fromComp = false;
@@ -44,7 +47,18 @@ function getNextDates($start,$due,$comp,$rrule)
         if($fromComp)  // FLAG: From Completion
         {
         	// Lazy calculate based on new due date calculation below
-        }        
+        	$newstart = new DateTime();
+        }
+        elseif ($fastFoward) 
+        {
+        	if( $due !== 0)
+        	{
+        		
+        	}       
+
+        	// Else:
+        	// Lazy calculate based on new due date calculation below
+        }
         else
         {
             $rs->recur($start)->rrule($rrule);
@@ -54,7 +68,7 @@ function getNextDates($start,$due,$comp,$rrule)
             // No next occuraence
             if( !( $d instanceof DateTime) )
             {
-            	return [-1,-1,""];
+            	return $noNextOccur;
             }
 
             // No next occurence after returned one
@@ -68,64 +82,84 @@ function getNextDates($start,$due,$comp,$rrule)
     }
         
     // Calculate DUE date
-    if( $due === 0)
+    if($fromComp)
+    {
+    	$rc->recur($comp)->rrule($rrule);
+		$d = $rc->next();
+		$d = $rc->next();
+
+        // No next occuraence
+        if( !( $d instanceof DateTime) )
+        {
+        	return $noNextOccur;
+        }
+
+		$newdue = $d;
+
+		if($newstart instanceof DateTime)
+		{
+			$newstart = clone $newdue;
+			$newstart->sub($start->diff($due));
+		}
+    }
+    elseif( $due === 0)
     {
         $newdue = 0;
     }
     else
     {
-        if($start === 0)
+        if($start === 0 || $fastFoward)
         {
             $rd->recur($due)->rrule($rrule);
-            $d = $rd->next();
-            $d = $rd->next();
 
-    		// No next occuraence
-            if( !( $d instanceof DateTime) )
+            try
             {
-            	return [-1,-1,""];
-            }
+	            $d = $rd->next();
+	            $d = $rd->next();
 
-            // No next occurence after returned one
-            if( !( $rd->next() instanceof DateTime ) )
-            {
-            	$newrrule = "";
-            }
-            
-            $newdue = clone $d;
+	    		// No next occuraence
+	            if( !( $d instanceof DateTime) )
+	            {
+	            	return $noNextOccur;
+	            }
+
+	            if($fastFoward)
+	            {
+	            	while( true )
+			        {
+			            if(!($d instanceof DateTime))
+			            {
+			                throw new Exception("", 1);
+			            }
+			            elseif ($d > $today)
+			            {
+			            	break;
+			            }
+
+			            $d = $rd->next();
+			        }      
+	            }
+
+	            // No next occurence after returned one
+	            if( !( $rd->next() instanceof DateTime ) )
+	            {
+	            	$newrrule = "";
+	            }
+	            
+	            $newdue = clone $d;
+        	}
+        	catch(Exception $e)
+        	{
+				return $noNextOccur;
+        	}
         }
         else
         {
-            if($fromComp)
-            {
-            	$rc->recur($comp)->rrule($rrule);
-				$d = $rc->next();
-				$d = $rc->next();
-
-				$newdue = $d;
-
-				$newstart = clone $newdue;
-				$newstart->sub($start->diff($due));
-            }
-            else
-            {
-                $newdue = clone $newstart;
-                $newdue->add($start->diff($due));
-            }
+        	$newdue = clone $newstart;
+        	$newdue->add($start->diff($due));
         }
     }   
- 
-        
-//        $ns = clone $newstart;        
-//        while( true )
-//        {
-//            if( $ns instanceof When)
-//                break;;
-//                
-//            echo $ns->format("m/d/Y") . "<br/>";
-//            $ns = $rs->next();
-//        }      
-    
+
     return array($newstart,$newdue,$newrrule);
 } 
 
