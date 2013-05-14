@@ -23,14 +23,13 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
-        public function test_SimpleMonthly_FromDue()
+        public function test_SimpleDailyLeapYear_FromDue()
         {
-            $ical = "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=1";
+            $ical = "FREQ=DAILY;INTERVAL=1";
 
             $start = 0;
-            $due = new DateTime("January 1, 2013");
-            $comp = 0;          
+            $due = new DateTime("February 28, 2013");
+            $comp = 0;
 
             $newstart = 0;
             $newdue = new DateTime("March 1, 2013");
@@ -41,6 +40,64 @@
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
+
+        public function test_SimpleDailyLeapYear2_FromDue()
+        {
+            $ical = "FREQ=DAILY;INTERVAL=1";
+
+            $start = 0;
+            $due = new DateTime("February 28, 2016");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("February 29, 2016");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
+        // public function test_SimpleMonthly_FromDue()
+        // {
+        //     $ical = "FREQ=MONTHLY;INTERVAL=2";
+
+        //     $start = 0;
+        //     $due = new DateTime("January 1, 2013");
+        //     $comp = 0;          
+
+        //     $newstart = 0;
+        //     $newdue = new DateTime("March 1, 2013");
+
+        //     $array = getNextDates($start,$due,$comp,$ical);
+
+        //     $this->assertEquals( $newstart, $array[0] );
+        //     $this->assertEquals( $newdue, $array[1] );
+        //     $this->assertEquals( $ical, $array[2] );
+        // }
+
+        // // TODO: Fix when Monthly works, remove BYMONTHDAY=1
+        // public function test_SingleMonthly_FromDue()
+        // {
+        //     $ical = "FREQ=MONTHLY";
+
+        //     $start = 0;
+        //     $due = new DateTime("January 31, 2013");
+        //     $comp = 0;          
+
+        //     //It should skip Februrary because there is no 31st of feb
+
+        //     $newstart = 0;
+        //     $newdue = new DateTime("March 31, 2013");
+
+        //     $array = getNextDates($start,$due,$comp,$ical);
+
+        //     $this->assertEquals( $newstart, $array[0] );
+        //     $this->assertEquals( $newdue, $array[1] );
+        //     $this->assertEquals( $ical, $array[2] );
+        // }
 
         public function test_SimpleYearly_FromDue()
         {

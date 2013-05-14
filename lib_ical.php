@@ -7,7 +7,7 @@ function getNextDates($start,$due,$comp,$rrule)
     $rs = new When();
     $rd = new When();
     $rc = new When();
-    $noNextOccur = [-1,-1,""];
+    $noNextOccur = array(-1,-1,"");
             
     $newstart = null;
     $newdue = null;
@@ -211,8 +211,8 @@ function convertToRRule($text, $fromcomp) {
 		else {
 			preg_match("/[a-z ]* ([0-9]*)([a-z ]*)/i",$text,$match);
 			
-			if(empty($match[0])) return icalRepeatAdvanced("Every ".$text);
-			if(empty($match[1])) return icalRepeatAdvanced("Every ".$match[2]);
+			if(empty($match[0])) return convertToRRule("Every ".$text);
+			if(empty($match[1])) return convertToRRule("Every ".$match[2]);
 			$num = $match[1];
 		}
 		
@@ -229,7 +229,7 @@ function convertToRRule($text, $fromcomp) {
 		$repeat = "FREQ=MONTHLY;BYDAY=".$num.$day;
 	}
 	
-        if($fromcomp) $repeat.=";FROMCOMP;";
+   if($fromcomp) $repeat.=";FROMCOMP";
         
 	return $repeat;
 }

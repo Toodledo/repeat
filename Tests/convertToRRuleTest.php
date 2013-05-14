@@ -13,6 +13,13 @@
             $converted = convertToRRule($repeat,false);
 
             $this->assertEquals( $ical, $converted );
+
+            $repeat = "Every 25 days";
+            $ical = "FREQ=DAILY;INTERVAL=25";
+
+            $converted = convertToRRule($repeat,false);
+
+            $this->assertEquals( $ical, $converted );
         }	
 
 		public function testEveryNWeek()
@@ -23,13 +30,26 @@
             $converted = convertToRRule($repeat,false);
 
             $this->assertEquals( $ical, $converted );
-        }	
 
+            $repeat = "Every 52 weeks";
+            $ical = "FREQ=WEEKLY;INTERVAL=52";
+
+            $converted = convertToRRule($repeat,false);
+
+            $this->assertEquals( $ical, $converted );
+        }	
 
         public function testEveryNMonth()
         {
             $repeat = "Every 2 months";
             $ical = "FREQ=MONTHLY;INTERVAL=2";
+
+            $converted = convertToRRule($repeat,false);
+
+            $this->assertEquals( $ical, $converted );
+
+            $repeat = "Every 12 months";
+            $ical = "FREQ=MONTHLY;INTERVAL=12";
 
             $converted = convertToRRule($repeat,false);
 
@@ -44,6 +64,28 @@
             $converted = convertToRRule($repeat,false);
 
             $this->assertEquals( $ical, $converted );
+
+            $repeat = "Every 12 years";
+            $ical = "FREQ=YEARLY;INTERVAL=12";
+
+            $converted = convertToRRule($repeat,false);
+
+            $this->assertEquals( $ical, $converted );
+        }
+
+        public function testSingularIntervals()
+        {
+            $converted = convertToRRule("Every 1 day",false);
+            $this->assertEquals( "FREQ=DAILY", $converted );
+
+            $converted = convertToRRule("Every 1 week",false);
+            $this->assertEquals( "FREQ=WEEKLY", $converted );
+
+            $converted = convertToRRule("Every 1 month",false);
+            $this->assertEquals( "FREQ=MONTHLY", $converted );
+
+            $converted = convertToRRule("Every 1 year",false);
+            $this->assertEquals( "FREQ=YEARLY", $converted );
         }
         
         public function testDayOfMonth()
@@ -160,24 +202,32 @@
             $this->assertEquals( $ical, $converted );
         }
         
-        /*
+        public function testUnusual()
+        {            
+            $repeat = "Every monday";
+            $ical = 'FREQ=WEEKLY;BYDAY=MO';
+            
+            $converted = convertToRRule($repeat,false);
+            $this->assertEquals( $ical, $converted );
+        }
+
         public function testParent()
         {            
             $repeat = "With Parent";
             $ical = 'PARENT';
             
-            $converted = convertToRRule($repeat,true);
+            $converted = convertToRRule($repeat,false);
             $this->assertEquals( $ical, $converted );
         }
         
         public function testComp()
-        {            
-            $repeat = "Every monday";
-            $ical = 'FREQ=WEEKLY;BYDAY=MO;FROMCOMP';
-            
+        {   
+            $repeat = "Every 2 days";
+            $ical = "FREQ=DAILY;INTERVAL=2;FROMCOMP";
+
             $converted = convertToRRule($repeat,true);
             $this->assertEquals( $ical, $converted );
         }
-        */
+        
     }
 ?>
