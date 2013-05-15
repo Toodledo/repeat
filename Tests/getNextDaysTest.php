@@ -81,7 +81,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_AllOptional()
+        public function test_AllOptionalParams()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
 
@@ -258,6 +258,82 @@
 
             $newstart = new DateTime("January 1, 2015");
             $newdue = 0;                
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_MonthlyByDay1()
+        {
+            // Every 2nd Tuesday
+            $ical = 'FREQ=MONTHLY;BYDAY=2TU';
+
+            $start = new DateTime("January 8, 2013");
+            $due = new DateTime("January 12, 2013");
+            $comp = 0;
+
+            $newstart = new DateTime("February 12, 2013");
+            $newdue = new DateTime("February 16, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_MonthlyByDay2()
+        {
+            // Every 3nd Sunday
+            $ical = 'FREQ=MONTHLY;BYDAY=3SU';
+
+            $start = new DateTime("January 20, 2013");
+            $due = new DateTime("January 21, 2013");
+            $comp = 0;
+
+            $newstart = new DateTime("February 17, 2013");
+            $newdue = new DateTime("February 18, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+        
+        public function test_WeeklyByDay1()
+        {
+            // Every Tuesday
+            $ical = 'FREQ=WEEKLY;BYDAY=TU';
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 5, 2013");
+            $comp = 0;
+
+            $newstart = new DateTime("January 8, 2013");
+            $newdue = new DateTime("January 12, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_WeeklyByDay2()
+        {
+            // Every Friday
+            $ical = 'FREQ=WEEKLY;BYDAY=FR';
+
+            $start = new DateTime("January 4, 2013");
+            $due = new DateTime("January 12, 2013");
+            $comp = 0;
+
+            $newstart = new DateTime("January 11, 2013");
+            $newdue = new DateTime("January 19, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
 

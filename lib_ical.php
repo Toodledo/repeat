@@ -55,7 +55,8 @@ function getNextDates($start,$due,$comp,$rrule)
 
     // Optional Rules
     $fromComp = false;
-    $fastFoward = false;    
+    $fastFoward = false;
+    $count = false;
 
     $match = array();
     preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
@@ -64,6 +65,10 @@ function getNextDates($start,$due,$comp,$rrule)
     $match = array();
     preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
     $fastFoward = !empty($match[1]);    
+
+    $countMatch = array();
+    preg_match("/(COUNT=[0-9][;]?)/i",$rrule,$countMatch);            
+    $count = !empty($countMatch[1]);
 
     if( $fromComp ) $rrule = preg_replace("/FROMCOMP[;]?/i", "", $newrrule);
     if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $newrrule);
@@ -323,6 +328,15 @@ function getNextDates($start,$due,$comp,$rrule)
         	$newdue->add($start->diff($due));
         }
     }   
+
+    // Update COUNT flag if exists and new rrule being returned
+    if($count && $newrrule != "")
+    {
+    	$carray = explode("=", $countMatch[1]);
+		$newcount = ((int)($carray[1])) - 1;
+		$newcountstr = "COUNT=".$newcount;
+		$newrrule = preg_replace("/(COUNT=[0-9])/i", $newcountstr, $newrrule);    	
+    }
 
     return array($newstart,$newdue,$newrrule);
 } 
