@@ -4,7 +4,7 @@
     
     // Get rrule string
     $rr = convertToRRule("Every Week", true);    
-    $rr = "FREQ=WEEKLY;INTERVAL=1;COUNT=0";	
+    $rr = "FREQ=WEEKLY;INTERVAL=1;FASTFORWARD";
 
     echo $rr;
     echo "<br/>";

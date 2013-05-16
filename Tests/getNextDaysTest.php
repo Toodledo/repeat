@@ -1,7 +1,7 @@
 <?php
 
-    //require_once 'PHPUnit/Autoload.php';
-    //require_once '../lib_ical.php';
+    require_once 'PHPUnit/Autoload.php';
+    require_once '../lib_ical.php';
 
     class RepeatTest2 extends PHPUnit_Framework_TestCase
     {
@@ -550,34 +550,156 @@
 
             $newstart = 0;
             $newdue = new DateTime("January 12, 2013");
-            $newical = $ical;
 
             $array = getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
-            $this->assertEquals( $newical, $array[2] );
+            $this->assertEquals( $ical, $array[2] );
         }
 
         public function test_FastFoward_Daily()
         {
-            // $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD";
+            // Current, tests to make sure the due date is in the future
+            // TODO: Does this need to test specific recurrence dates in the future?
+            //       Or just make sure it's in the future?
 
-            // TODO: Calculate tomorrow
+            $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD";
 
-            // $start = 0;
-            // $due = new DateTime("January 2, 2013");
-            // $comp = new DateTime("January 10, 2013");
+            $today = new DateTime(date('Y-m-d H:i:s'));
 
-            // $newstart = 0;   
-            // $newdue = $tomorrow;
-            // $newical = $ical;
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
 
-            // $array = getNextDates($start,$due,$comp,$ical);
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertGreaterThan( $today, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
 
-            // $this->assertEquals( $newstart, $array[0] );
-            // $this->assertEquals( $newdue, $array[1] );
-            // $this->assertEquals( $newical, $array[2] );
+        public function test_FastFoward_Weekly()
+        {
+            // Current, tests to make sure the due date is in the future
+            // TODO: Does this need to test specific recurrence dates in the future?
+            //       Or just make sure it's in the future?
+
+            $ical = "FREQ=WEEKLY;INTERVAL=1;FASTFORWARD";
+
+            $today = new DateTime(date('Y-m-d H:i:s'));
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertGreaterThan( $today, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
+        // public function test_FastFoward_Monthly()
+        // {
+        //     // Current, tests to make sure the due date is in the future
+        //     // TODO: Does this need to test specific recurrence dates in the future?
+        //     //       Or just make sure it's in the future?
+
+        //     $ical = "FREQ=MONTHLY;INTERVAL=1;FASTFORWARD";
+
+        //     $today = new DateTime(date('Y-m-d H:i:s'));
+
+        //     $start = new DateTime("January 1, 2013");
+        //     $due = new DateTime("January 2, 2013");
+        //     $comp = new DateTime("January 5, 2013");
+
+        //     $array = getNextDates($start,$due,$comp,$ical);
+            
+        //     $this->assertGreaterThan( $today, $array[1] );
+        //     $this->assertEquals( $ical, $array[2] );
+        // }
+
+        public function test_FastFoward_Yearly()
+        {
+            // Current, tests to make sure the due date is in the future
+            // TODO: Does this need to test specific recurrence dates in the future?
+            //       Or just make sure it's in the future?
+
+            $ical = "FREQ=YEARLY;INTERVAL=1;FASTFORWARD";
+
+            $today = new DateTime(date('Y-m-d H:i:s'));
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");
+            $comp = new DateTime("January 5, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertGreaterThan( $today, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_Count_FastFoward_Daily()
+        {
+            $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD;COUNT=5";
+
+            $today = new DateTime(date('Y-m-d H:i:s'));
+
+            $start = new DateTime("January 1, 2012");
+            $due = new DateTime("January 2, 2012");
+            $comp = new DateTime("January 5, 2012");
+
+            $newstart = -1;
+            $newdue = -1;
+            $newical = "";
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_Count_FastFoward_Weekly()
+        {
+            $ical = "FREQ=WEEKLY;INTERVAL=1;FASTFORWARD;COUNT=5";
+
+            $today = new DateTime(date('Y-m-d H:i:s'));
+
+            $start = new DateTime("January 1, 2012");
+            $due = new DateTime("January 2, 2012");
+            $comp = new DateTime("January 5, 2012");
+
+            $newstart = -1;
+            $newdue = -1;
+            $newical = "";
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_Count_FastFoward_Yearly()
+        {
+            $ical = "FREQ=YEARLY;INTERVAL=1;FASTFORWARD;COUNT=5";
+
+            $today = new DateTime(date('Y-m-d H:i:s'));
+
+            $start = new DateTime("January 1, 1987");
+            $due = new DateTime("January 2, 1987");
+            $comp = new DateTime("January 5, 1987");
+
+            $newstart = -1;
+            $newdue = -1;
+            $newical = "";
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
         }
     }
 ?>

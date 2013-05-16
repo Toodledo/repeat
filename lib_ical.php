@@ -349,8 +349,13 @@ function convertToRRule($text, $fromcomp)
 	
 	$every = strpos($text,'every');
 	$each = strpos($text,'each');
+	$parent = strpos($text,'parent');
 	
-	if(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
+	if($parent !== FALSE)
+	{
+		$repeat = "PARENT";
+	}
+	elseif(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
 	
 		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);		
 		if(empty($match[1])) $match[1] = 1;	// X
