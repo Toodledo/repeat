@@ -99,6 +99,42 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
+        public function test_UnixTimestamp_SimpleDaily()
+        {
+            $ical = "FREQ=DAILY;INTERVAL=1";
+
+            $start = 0;
+            $due = 1325404800;  // Jan 1, 2012 PDT
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 2, 2012");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );            
+        }
+
+        public function test_UnixTimestamp_SimpleYearly()
+        {
+            $ical = "FREQ=YEARLY;INTERVAL=1";
+
+            $start = 0;
+            $due = 1325404800;  // Jan 1, 2012 PDT
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 1, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );            
+        }
+
         public function test_SimpleDaily_FromDue()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
