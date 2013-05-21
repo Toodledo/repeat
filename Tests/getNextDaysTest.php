@@ -685,8 +685,6 @@
         {
             $ical = "FREQ=YEARLY;INTERVAL=1;FASTFORWARD;COUNT=5";
 
-            $today = new DateTime(date('Y-m-d H:i:s'));
-
             $start = new DateTime("January 1, 1987");
             $due = new DateTime("January 2, 1987");
             $comp = new DateTime("January 5, 1987");
@@ -700,6 +698,82 @@
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $newical, $array[2] );
+        }
+
+        public function test_US_Holiday_MothersDay()
+        {
+            // --- Mothers Day ------------------------- //
+            $ical = "FREQ=YEARLY;BYDAY=2SU;BYMONTH=5";
+
+            $start = 0;
+            $due = new DateTime("May 13, 2012");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("May 12, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_US_Holiday_FathersDay()
+        {
+            // --- Fathers Day ------------------------ //
+            $ical = "FREQ=YEARLY;BYDAY=3SU;BYMONTH=6";
+
+            $start = 0;
+            $due = new DateTime("June 17, 2012");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("June 16, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_US_Holiday_IndependenceDay()
+        {
+            // --- Independence Day --------------------- //
+            $ical = "FREQ=YEARLY;BYMONTHDAY=4;BYMONTH=7";
+
+            $start = 0;
+            $due = new DateTime("July 4, 2012");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("July 4, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_US_Holiday_Christmas()
+        {
+            // --- Christmas Day ------------------------ //
+            $ical = "FREQ=YEARLY;BYMONTHDAY=24;BYMONTH=12";
+
+            $start = 0;
+            $due = new DateTime("Dec 24, 2012");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("Dec 24, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+            
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
         }
     }
 ?>
