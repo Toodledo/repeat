@@ -5,6 +5,15 @@
 
     class RepeatTest2 extends PHPUnit_Framework_TestCase
     {
+
+
+        /*
+
+            TESTS FOR BAD INPUTS
+
+        */
+
+
         public function test_BadParams()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
@@ -13,8 +22,9 @@
             $due = "efhg";
             $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            //TODO: it would be better for me to return 0 on invalid dates
+            $newstart = 0;
+            $newdue = 0;
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -32,8 +42,9 @@
             $due = "efhg";
             $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            //TODO: should not clear start just because due is invalid
+            $newstart = new DateTime("January 1, 2012");
+            $newdue = 0;
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -51,8 +62,9 @@
             $due = new DateTime("January 10, 2012");;
             $comp = 4.5;
 
-            $newstart = -1;
-            $newdue = -1;
+            //TODO: should not clear dates because comp was invalid. Just treat it as if comp was 0
+            $newstart = new DateTime("January 2, 2012");
+            $newdue = new DateTime("January 11, 2012");
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -67,9 +79,10 @@
             $ical = "ASDF;FREQ=DAILY;INTERVAL=1";
 
             $start = new DateTime("January 1, 2012");
-            $due = new DateTime("January 10, 2012");;
+            $due = new DateTime("January 10, 2012");
             $comp = 0;
 
+            //TODO: if the RRULE is invalid, the clear the rule, but keep the dates unchanged
             $newstart = -1;
             $newdue = -1;
             $newical = "";
@@ -81,6 +94,14 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
+
+        /*
+
+            TESTS FOR SIMPLE INTERVALS (EVERY X T)
+
+        */
+
+
         public function test_AllOptionalParams()
         {
             $ical = "FREQ=DAILY;INTERVAL=1";
@@ -89,8 +110,9 @@
             $due = 0;
             $comp = 0;
 
+            //TODO: If both start and due are blank, then the task should repeat from "today" and the due-date should be rescheduled.
             $newstart = 0;
-            $newdue = 0;
+            $newdue = strtotime("today"); //update this to be really today
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -109,6 +131,42 @@
 
             $newstart = 0;
             $newdue = new DateTime("January 2, 2012");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );            
+        }
+
+        public function test_UnixTimestamp_SimpleDaily40()
+        {
+            $ical = "FREQ=DAILY;INTERVAL=40";
+
+            $start = 0;
+            $due = 1325404800;  // Jan 1, 2012 PDT
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("February 10, 2012");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );            
+        }
+
+         public function test_UnixTimestamp_SimpleWeekly()
+        {
+            $ical = "FREQ=WEEKLY;INTERVAL=2";
+
+            $start = 0;
+            $due = 1325404800;  // Jan 1, 2012 PDT
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 15, 2012");
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -302,7 +360,35 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_MonthlyByDay1()
+       
+        public function test_SimpleYearly_Both()
+        {
+            $ical = "FREQ=YEARLY;INTERVAL=2";
+
+            $start = new DateTime("January 1, 2013");
+            $due = new DateTime("January 2, 2013");;
+            $comp = 0;
+
+            $newstart = new DateTime("January 1, 2015");
+            $newdue = new DateTime("January 2, 2015");;                
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+
+
+        /*
+
+            TESTS FOR MONTHLY BY DAY (ON THE X D OF THE MONTH)
+
+        */
+
+
+         public function test_MonthlyByDay1()
         {
             // Every 2nd Tuesday
             $ical = 'FREQ=MONTHLY;BYDAY=2TU';
@@ -311,8 +397,9 @@
             $due = new DateTime("January 12, 2013");
             $comp = 0;
 
-            $newstart = new DateTime("February 12, 2013");
-            $newdue = new DateTime("February 16, 2013");
+            //TODO: due-date should be on the second tuesday
+            $newstart = new DateTime("February 8, 2013");
+            $newdue = new DateTime("February 12, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -330,8 +417,9 @@
             $due = new DateTime("January 21, 2013");
             $comp = 0;
 
-            $newstart = new DateTime("February 17, 2013");
-            $newdue = new DateTime("February 18, 2013");
+            //TODO: The due-date should be on the 3rd sunday
+            $newstart = new DateTime("February 16, 2013");
+            $newdue = new DateTime("February 17, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -340,6 +428,34 @@
             $this->assertEquals( $ical, $array[2] );
         }
         
+        public function test_MonthlyByDayLast()
+        {
+            // Every last Wed
+            $ical = 'FREQ=MONTHLY;BYDAY=-1WE';
+
+            $start = new DateTime("January 20, 2013");
+            $due = new DateTime("January 21, 2013");
+            $comp = 0;
+
+            //TODO: The due-date should be on the last wed
+            $newstart = new DateTime("February 26, 2013");
+            $newdue = new DateTime("February 27, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        /*
+
+            TESTS FOR BY WEEK (EVERY W)
+
+        */
+
+
+
         public function test_WeeklyByDay1()
         {
             // Every Tuesday
@@ -349,8 +465,9 @@
             $due = new DateTime("January 5, 2013");
             $comp = 0;
 
-            $newstart = new DateTime("January 8, 2013");
-            $newdue = new DateTime("January 12, 2013");
+            //TODO: always reschedule the due-date
+            $newstart = new DateTime("January 4, 2013");
+            $newdue = new DateTime("January 8, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -368,7 +485,48 @@
             $due = new DateTime("January 12, 2013");
             $comp = 0;
 
-            $newstart = new DateTime("January 11, 2013");
+            //TODO: rescheduled from due
+            $newstart = new DateTime("January 10, 2013");
+            $newdue = new DateTime("January 18, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_WeeklyByDayWeekend1()
+        {
+            // Every weekend
+            $ical = 'FREQ=WEEKLY;BYDAY=SU,SA';
+
+            $start = 0;
+            $due = new DateTime("January 12, 2013");
+            $comp = 0;
+
+            //TODO: rescheduled from due
+            $newstart = 0;
+            $newdue = new DateTime("January 13, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+        
+        public function test_WeeklyByDayWeekend2()
+        {
+            // Every weekend
+            $ical = 'FREQ=WEEKLY;BYDAY=SU,SA';
+
+            $start = 0;
+            $due = new DateTime("January 13, 2013");
+            $comp = 0;
+
+            //TODO: rescheduled from due
+            $newstart = 0;
             $newdue = new DateTime("January 19, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -377,6 +535,37 @@
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
+
+
+        public function test_WeeklyByWeekday()
+        {
+            // Every weekday
+            $ical = 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR';
+
+            $start = new DateTime("January 4, 2013");
+            $due = new DateTime("January 12, 2013");
+            $comp = 0;
+
+            //TODO: rescheduled from due
+            $newstart = new DateTime("January 6, 2013");
+            $newdue = new DateTime("January 14, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+
+
+        /*
+
+            TESTS FOR UNTIL
+
+        */
+
+
 
         public function test_DailyUntil_NoNextOccurrence()
         {
@@ -498,6 +687,53 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
+         public function test_YearlyUntil_LastOccurrenceNoStart()
+        {
+            // Repeat until Jan. 1, 2014
+            $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
+
+            $start = 0;
+            $due = new DateTime("January 2, 2013");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 2, 2014");
+            $newical = '';
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+         public function test_YearlyUntil_LastOccurrenceNoDue()
+        {
+            // Repeat until Jan. 1, 2014
+            $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
+
+            $start = new DateTime("January 1, 2013");
+            $due = 0;
+            $comp = 0;
+
+            $newstart = new DateTime("January 1, 2014");
+            $newdue = 0;
+            $newical = '';
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $newical, $array[2] );
+        }
+
+
+          /*
+
+            TESTS FOR FROM COMP
+
+        */
+
 
         public function test_FromCompletion_Daily()
         {
@@ -521,7 +757,7 @@
         // TODO: Fix when Monthly works, remove BYMONTHDAY=5
         public function test_FromCompletion_Monthly()
         {
-            $ical = "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=5;FROMCOMP";
+            $ical = "FREQ=MONTHLY;INTERVAL=1;FROMCOMP";
 
             $start = new DateTime("January 1, 2013");
             $due = new DateTime("January 2, 2013");
@@ -559,14 +795,14 @@
 
         public function test_FromCompletion_Yearly()
         {
-            $ical = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";
+            $ical = "FREQ=YEARLY;INTERVAL=1;FROMCOMP";
 
             $start = new DateTime("January 1, 2013");
             $due = new DateTime("January 2, 2013");
             $comp = new DateTime("January 5, 2013");
 
-            $newstart = new DateTime("January 11, 2013");
-            $newdue = new DateTime("January 12, 2013");
+            $newstart = new DateTime("January 4, 2014");
+            $newdue = new DateTime("January 5, 2014");
             $newical = $ical;
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -578,14 +814,14 @@
 
         public function test_FromCompletion_Yearly_WithoutStart()
         {
-            $ical = "FREQ=WEEKLY;INTERVAL=1;FROMCOMP";
+            $ical = "FREQ=YEARLY;INTERVAL=1;FROMCOMP";
 
             $start = 0;
-            $due = new DateTime("January 2, 2013");
+            $due = new DateTime("January 2, 2011");
             $comp = new DateTime("January 5, 2013");
 
             $newstart = 0;
-            $newdue = new DateTime("January 12, 2013");
+            $newdue = new DateTime("January 5, 2014");
 
             $array = getNextDates($start,$due,$comp,$ical);
 
@@ -593,6 +829,33 @@
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
+
+        public function test_FromCompletion_Yearly_WithoutDue()
+        {
+            $ical = "FREQ=YEARLY;INTERVAL=1;FROMCOMP";
+
+            $start = new DateTime("January 2, 2011");
+            $due = 0;
+            $comp = new DateTime("January 5, 2013");
+
+            $newstart = new DateTime("January 5, 2014");
+            $newdue = 0;
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+
+          /*
+
+            TESTS FOR FASTFORWARD
+
+        */
+
+
 
         public function test_FastFoward_Daily()
         {
@@ -603,6 +866,7 @@
             $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD";
 
             $today = new DateTime(date('Y-m-d H:i:s'));
+            $tomorow = 12345;
 
             $start = new DateTime("January 1, 2013");
             $due = new DateTime("January 2, 2013");
@@ -610,7 +874,9 @@
 
             $array = getNextDates($start,$due,$comp,$ical);
             
-            $this->assertGreaterThan( $today, $array[1] );
+            //TODO: test that the new duedate is tomorrow and start is today
+            $this->assertEquals( $today, $array[0] );
+            $this->assertEquals( $tomorow, $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
 
@@ -622,15 +888,21 @@
 
             $ical = "FREQ=WEEKLY;INTERVAL=1;FASTFORWARD";
 
-            $today = new DateTime(date('Y-m-d H:i:s'));
+            
+            $start = new DateTime("January 1, 2013"); //tue
+            $due = new DateTime("January 2, 2013"); //wed
+            $comp = 0; 
 
-            $start = new DateTime("January 1, 2013");
-            $due = new DateTime("January 2, 2013");
-            $comp = new DateTime("January 5, 2013");
+            //TODO: this should take Jan 2 and move it foward a week at a time until it is not in the past
+            $newstart = new DateTime("June 4, 2013");
+            $newdue = new DateTime("June 5, 2013"); 
+
 
             $array = getNextDates($start,$due,$comp,$ical);
             
-            $this->assertGreaterThan( $today, $array[1] );
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
+
             $this->assertEquals( $ical, $array[2] );
         }
 
@@ -663,31 +935,38 @@
 
             $ical = "FREQ=YEARLY;INTERVAL=1;FASTFORWARD";
 
-            $today = new DateTime(date('Y-m-d H:i:s'));
 
-            $start = new DateTime("January 1, 2013");
-            $due = new DateTime("January 2, 2013");
-            $comp = new DateTime("January 5, 2013");
+            $start = new DateTime("January 1, 2010");
+            $due = new DateTime("January 2, 2010");
+            $comp = 0;
 
             $array = getNextDates($start,$due,$comp,$ical);
-            
-            $this->assertGreaterThan( $today, $array[1] );
+        
+            //TODO: it should skip 2011 and 2012 and 2013 because they are in the past and go to Jan 1/2 2014
+            $this->assertEquals( "tbd", $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
 
+
+        
+          /*
+
+            TESTS FOR COUNT
+
+        */
+
         public function test_Count_FastFoward_Daily()
         {
-            $ical = "FREQ=DAILY;INTERVAL=1;FASTFORWARD;COUNT=5";
+            $ical = "FREQ=DAILY;INTERVAL=1;COUNT=5";
 
-            $today = new DateTime(date('Y-m-d H:i:s'));
 
             $start = new DateTime("January 1, 2012");
             $due = new DateTime("January 2, 2012");
-            $comp = new DateTime("January 5, 2012");
+            $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
-            $newical = "";
+            $newstart = new DateTime("January 2, 2012"); 
+            $newdue = new DateTime("January 3, 2012");
+            $newical = "FREQ=DAILY;INTERVAL=1;COUNT=4";
 
             $array = getNextDates($start,$due,$comp,$ical);
             
@@ -696,18 +975,17 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_Count_FastFoward_Weekly()
+        public function test_Count_FastFoward_DailyLastTime()
         {
-            $ical = "FREQ=WEEKLY;INTERVAL=1;FASTFORWARD;COUNT=5";
+            $ical = "FREQ=WEEKLY;INTERVAL=1;COUNT=1";
 
-            $today = new DateTime(date('Y-m-d H:i:s'));
 
             $start = new DateTime("January 1, 2012");
             $due = new DateTime("January 2, 2012");
-            $comp = new DateTime("January 5, 2012");
+            $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            $newstart = new DateTime("January 8, 2012"); 
+            $newdue = new DateTime("January 9, 2012");
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -735,6 +1013,14 @@
             $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $newical, $array[2] );
         }
+
+
+      /*
+
+            TESTS FOR HOLIDAYS AND COMPLEXT BEHAVIOR
+
+        */
+
 
         public function test_US_Holiday_MothersDay()
         {
@@ -796,14 +1082,14 @@
         public function test_US_Holiday_Christmas()
         {
             // --- Christmas Day ------------------------ //
-            $ical = "FREQ=YEARLY;BYMONTHDAY=24;BYMONTH=12";
+            $ical = "FREQ=YEARLY;BYMONTHDAY=25;BYMONTH=12";
 
             $start = 0;
-            $due = new DateTime("Dec 24, 2012");
+            $due = new DateTime("Dec 25, 2012");
             $comp = 0;
 
             $newstart = 0;
-            $newdue = new DateTime("Dec 24, 2013");
+            $newdue = new DateTime("Dec 25, 2013");
 
             $array = getNextDates($start,$due,$comp,$ical);
             

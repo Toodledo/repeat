@@ -230,6 +230,12 @@
 
             $converted = convertToRRule($repeat,true);
             $this->assertEquals( $ical, $converted );
+
+            $repeat = "Every weekday";
+            $ical = 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;FROMCOMP';
+            
+            $converted = convertToRRule($repeat,true);
+            $this->assertEquals( $ical, $converted );
         }
         
     }
