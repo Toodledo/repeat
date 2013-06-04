@@ -5,6 +5,12 @@ require_once 'When.php';	// Include When library
 function getNextDates($start,$due,$comp,$rrule)		
 {
 	$noNextOccur = array(-1,-1,"");
+	$today = new DateTime(date('Y-m-d H:i:s'));
+
+	if($start === 0 && $due === 0)
+	{
+		$due = $today;
+	}
 
 	// If start and due are timestamps, convert them to dates
 	if($start !== 0)
@@ -16,7 +22,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			$start = $s;
 		}
 
-		if(!($start instanceof DateTime)) return $noNextOccur;
+		if(!($start instanceof DateTime)) $start = 0;
 	}
 
 	if($due !== 0)
@@ -28,7 +34,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			$due = $d;
 		}
 
-		if(!($due instanceof DateTime)) return $noNextOccur;
+		if(!($due instanceof DateTime)) $due = 0;
 	}	
 
 	if($comp !== 0)
@@ -40,7 +46,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			$comp = $d;
 		}
 
-		if(!($comp instanceof DateTime)) return $noNextOccur;
+		if(!($comp instanceof DateTime)) $comp = 0;
 	}	
 
     $rs = new When();
@@ -49,9 +55,7 @@ function getNextDates($start,$due,$comp,$rrule)
             
     $newstart = null;
     $newdue = null;
-    $newrrule = $rrule;
-
-    $today = new DateTime(date('Y-m-d H:i:s'));
+    $newrrule = $rrule;    
 
     // Optional Rules
     $fromComp = false;
@@ -90,11 +94,11 @@ function getNextDates($start,$due,$comp,$rrule)
         		}
         		catch(Exception $e)
         		{
-        			return $noNextOccur;
+        			return array($start,$due,"");
         		}
 
 				$d = $rc->next();
-				$d = $rc->next();
+				if($d == $comp) $d = $rc->next();
 
 		        // No next occuraence
 		        if( !( $d instanceof DateTime) )
@@ -124,7 +128,7 @@ function getNextDates($start,$due,$comp,$rrule)
         		}
         		catch(Exception $e)
         		{
-        			return $noNextOccur;
+        			return array($start,$due,"");
         		}
 
         		$d = null;
@@ -157,7 +161,7 @@ function getNextDates($start,$due,$comp,$rrule)
         		}
         		catch(Exception $e)
         		{
-        			return $noNextOccur;
+        			return array($start,$due,"");
         		}
 
         		$diff = $start->diff($due);
@@ -199,11 +203,11 @@ function getNextDates($start,$due,$comp,$rrule)
     		}
     		catch(Exception $e)
     		{
-    			return $noNextOccur;
+    			return array($start,$due,"");
     		}
 
             $d = $rs->next();
-            $d = $rs->next();
+            if($d == $start) $d = $rs->next();
 
             // No next occuraence
             if( !( $d instanceof DateTime) )
@@ -226,41 +230,6 @@ function getNextDates($start,$due,$comp,$rrule)
     {
         $newdue = 0;
     }
-    elseif($fromComp)	// FLAG: FROMCOMP
-    {
-    	try
-		{
-			$rc->recur($comp)->rrule($rrule);
-		}
-		catch(Exception $e)
-		{
-			return $noNextOccur;
-		}
-
-		$d = $rc->next();
-		$d = $rc->next();
-
-        // No next occuraence
-        if( !( $d instanceof DateTime) )
-        {
-        	return $noNextOccur;
-        }
-
-        // No next occurence after returned one
-        if( !( $rc->next() instanceof DateTime ) )
-        {
-        	$newrrule = "";
-        }		
-
-        $newdue = $d;
-
-        // Lazy calculation of new start if not 0
-		if($start !== 0)
-		{
-			$newstart = clone $newdue;
-			$newstart->sub($start->diff($due));
-		}		
-    }
     elseif($fastFoward)	// FLAG: FASTFOWARD
     {
     	if($start === 0)
@@ -271,7 +240,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			}
 			catch(Exception $e)
 			{
-				return $noNextOccur;
+				return array($start,$due,"");
 			}
 
 	    	// Loop until future date if it exists
@@ -290,43 +259,62 @@ function getNextDates($start,$due,$comp,$rrule)
 	        }      
 
 	        $newdue = $d;
+
+	        if($start !== 0)
+			{
+				$newstart = clone $newdue;
+				$newstart->sub($start->diff($due));
+			}	
     	}
     }
     else
     {
-        if($start === 0)
-        {
-        	try
+    	try
+		{
+			if($fromComp)
+			{
+				$rd->recur($comp)->rrule($rrule);
+			}
+			else
 			{
 				$rd->recur($due)->rrule($rrule);
 			}
-			catch(Exception $e)
-			{
-				return $noNextOccur;
-			}
+		}
+		catch(Exception $e)
+		{
+			return array($start,$due,"");
+		}
 
-			$d = $rd->next();
-            $d = $rd->next();
+		$d = $rd->next();
+		if($fromComp)
+		{
+			if($d == $comp) $d = $rd->next();
+		}
+		else
+		{
+			if($d == $due) $d = $rd->next();	
+		}
 
-    		// No next occuraence
-            if( !( $d instanceof DateTime) )
-            {
-            	return $noNextOccur;
-            }
-
-            // No next occurence after returned one
-            if( !( $rd->next() instanceof DateTime ) )
-            {
-            	$newrrule = "";
-            }
-            
-            $newdue = clone $d;
-        }
-        else
+        // No next occuraence
+        if( !( $d instanceof DateTime) )
         {
-        	$newdue = clone $newstart;
-        	$newdue->add($start->diff($due));
+        	return $noNextOccur;
         }
+
+        // No next occurence after returned one
+        if( !( $rd->next() instanceof DateTime ) )
+        {
+        	$newrrule = "";
+        }		
+
+        $newdue = $d;
+
+        // Lazy calculation of new start if not 0
+		if($start !== 0)
+		{
+			$newstart = clone $newdue;
+			$newstart->sub($start->diff($due));
+		}
     }   
 
     // Update COUNT flag if exists and new rrule being returned
