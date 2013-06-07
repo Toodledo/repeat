@@ -605,11 +605,11 @@
             $ical = "FREQ=DAILY;UNTIL=20130102T000000Z";
 
             $start = new DateTime("January 1, 2013");
-            $due = new DateTime("January 2, 2013");
+            $due = new DateTime("January 1, 2013");
             $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            $newstart = new DateTime("January 2, 2013");
+            $newdue = new DateTime("January 2, 2013");
             $newical = '';
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -624,12 +624,12 @@
             // Repeat until Jan. 30, 2013
             $ical = "FREQ=WEEKLY;UNTIL=20130130T000000Z";
 
-            $start = new DateTime("January 21, 2013");
-            $due = new DateTime("January 25, 2013");
+            $start = new DateTime("January 19, 2013");
+            $due = new DateTime("January 20, 2013");
             $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            $newstart = new DateTime("January 26, 2013");
+            $newdue = new DateTime("January 27, 2013");
             $newical = '';
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -641,15 +641,15 @@
 
         public function test_YearlyUntil_LastOccurrence()
         {
-            // Repeat until Jan. 1, 2014
-            $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
+            // Repeat until Feb. 2, 2014
+            $ical = "FREQ=YEARLY;UNTIL=20140202T000000Z";
 
             $start = new DateTime("January 1, 2013");
             $due = new DateTime("January 2, 2013");
             $comp = 0;
 
-            $newstart = -1;
-            $newdue = -1;
+            $newstart = new DateTime("January 1, 2014");
+            $newdue = new DateTime("January 2, 2014");
             $newical = '';
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -665,11 +665,11 @@
             $ical = "FREQ=YEARLY;UNTIL=20140101T000000Z";
 
             $start = 0;
-            $due = new DateTime("January 2, 2013");
+            $due = new DateTime("January 1, 2013");
             $comp = 0;
 
             $newstart = -1;
-            $newdue = -1;
+            $newdue = new DateTime("January 1, 2014");
             $newical = '';
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -883,16 +883,18 @@
             // TODO: FINISH
             $ical = "FREQ=YEARLY;INTERVAL=1;FASTFORWARD";
 
-            $todayPlusOneYear = new DateTime(date('Y-m-d', strtotime("today + 1 year")));
-
             $start = new DateTime("January 1, 2010");
             $due = new DateTime("January 2, 2010");
             $comp = 0;
 
+            $newstart = new DateTime("January 1, 2014");
+            $newdue = new DateTime("January 2, 2014");
+
             $array = getNextDates($start,$due,$comp,$ical);
         
             //TODO: it should skip 2011 and 2012 and 2013 because they are in the past and go to Jan 1/2 2014
-            $this->assertEquals( , $array[1]->format("Y") );
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue, $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
 
@@ -900,7 +902,7 @@
             TESTS FOR COUNT
         */
 
-        public function test_Count_FastFoward_Daily()
+        public function test_Count_Daily()
         {
             $ical = "FREQ=DAILY;INTERVAL=1;COUNT=5";
 
@@ -920,7 +922,7 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
-        public function test_Count_FastFoward_DailyLastTime()
+        public function test_Count_DailyLastTime()
         {
             $ical = "FREQ=WEEKLY;INTERVAL=1;COUNT=1";
 
