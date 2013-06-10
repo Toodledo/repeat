@@ -12,36 +12,7 @@ function getNextDates($start,$due,$comp,$rrule)
 		$due = $today;
 	}
 
-    $rs = new When();
-    $rd = new When();
-    $rc = new When();    
-            
-    $newstart = null;
-    $newdue = null;
-    $newrrule = $rrule;    
-
-    // Optional Rules
-    $fromComp = false;
-    $fastFoward = false;
-    $count = false;
-    $subtractCount = 1;
-
-    $match = array();
-    preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
-    $fromComp = !empty($match[1]) && !empty($comp);    
-
-    $match = array();
-    preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
-    $fastFoward = !empty($match[1]);    
-
-    $countMatch = array();
-    preg_match("/(COUNT=([0-9]*)[;]?)/i",$rrule,$countMatch);
-    $count = !empty($countMatch[1]);
-
-    if( $fromComp ) $rrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
-    if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $rrule);
-
-    	// If start and due are timestamps, convert them to dates
+	// If start and due are timestamps, convert them to dates
 	if($start !== 0)
 	{
 		if(is_int($start)) 
@@ -77,6 +48,35 @@ function getNextDates($start,$due,$comp,$rrule)
 
 		if(!($comp instanceof DateTime)) $comp = 0;
 	}	
+	
+    $rs = new When();
+    $rd = new When();
+    $rc = new When();    
+            
+    $newstart = null;
+    $newdue = null;
+    $newrrule = $rrule;    
+
+    // Optional Rules
+    $fromComp = false;
+    $fastFoward = false;
+    $count = false;
+    $subtractCount = 1;
+
+    $match = array();
+    preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
+    $fromComp = !empty($match[1]) && !empty($comp) && $comp !== 0;   
+
+    $match = array();
+    preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
+    $fastFoward = !empty($match[1]);    
+
+    $countMatch = array();
+    preg_match("/(COUNT=([0-9]*)[;]?)/i",$rrule,$countMatch);
+    $count = !empty($countMatch[1]);
+
+    if( $fromComp ) $rrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+    if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $rrule);
 
    	// Calculate DUE date
     if( $due === 0)
@@ -97,12 +97,12 @@ function getNextDates($start,$due,$comp,$rrule)
 			{
 				$rd->recur($due)->rrule($rrule);
 				$d = $rd->next();
-				if($d == $due) $d = $rd->next();	
+				if($d == $due) $d = $rd->next();
 			}
 		}
 		catch(Exception $e)
 		{
-			return array($start,$due,"");
+			return array($start->getTimestamp(),$due->getTimestamp(),"");
 		}
 
         // No next occuraence
@@ -141,12 +141,13 @@ function getNextDates($start,$due,$comp,$rrule)
         	$newrrule = "";
         }		
 
-        $newdue = $d;
+        $newdue = $d->getTimestamp();
 
 		if($start !== 0)
 		{
-			$newstart = clone $newdue;
+			$newstart = clone $d;
 			$newstart->sub($start->diff($due));
+			$newstart = $newstart->getTimestamp();
 		}
 		else
 		{
@@ -180,7 +181,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			}
 			catch(Exception $e)
 			{
-				return array($start,$due,"");
+				return array($start->getTimestamp(),$due->getTimestamp(),"");
 			}
 
 			// No next occuraence
@@ -220,7 +221,7 @@ function getNextDates($start,$due,$comp,$rrule)
             	$newrrule = "";
             }
 
-			$newstart = $d;
+			$newstart = $d->getTimestamp();
         }        
     }   
 

@@ -3,7 +3,7 @@
     //require_once 'PHPUnit/Autoload.php';
     //require_once '../lib_ical.php';
 
-    class RepeatTest extends PHPUnit_Framework_TestCase
+    class ConvertToRRuleTests extends PHPUnit_Framework_TestCase
     {	
         /*
          *  SECTION: Convert to ical
