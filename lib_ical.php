@@ -91,13 +91,49 @@ function getNextDates($start,$due,$comp,$rrule)
 			{
 				$rd->recur($comp)->rrule($rrule);
 				$d = $rd->next();
-				if($d == $comp) $d = $rd->next();
+				if(  $d == $comp) 
+				{
+					if($count)
+					{
+						// Work around for When() lib behavior
+						$carray = explode("=", $countMatch[1]);
+						$newcount = ((int)($carray[1])) + 1;
+
+						$newcountstr = "COUNT=".$newcount;
+						$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
+
+						$rd = new When();
+						$rd->recur($comp)->rrule($temprrule);
+						
+						$d = $rd->next();
+					}
+
+					$d = $rd->next();	
+				}
 			}
 			else
 			{
 				$rd->recur($due)->rrule($rrule);
 				$d = $rd->next();
-				if($d == $due) $d = $rd->next();
+				if(  $d == $due) 
+				{
+					if($count)
+					{
+						// Work around for When() lib behavior
+						$carray = explode("=", $countMatch[1]);
+						$newcount = ((int)($carray[1])) + 1;
+
+						$newcountstr = "COUNT=".$newcount;
+						$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
+
+						$rd = new When();
+						$rd->recur($due)->rrule($temprrule);
+						
+						$d = $rd->next();
+					}
+
+					$d = $rd->next();				
+				}				
 			}
 		}
 		catch(Exception $e)
@@ -170,13 +206,49 @@ function getNextDates($start,$due,$comp,$rrule)
 				{
 					$rc->recur($comp)->rrule($rrule);
 					$d = $rc->next();
-					if($d == $comp) $d = $rc->next();
+					if(  $d == $comp) 
+					{
+						if($count)
+						{
+							// Work around for When() lib behavior
+							$carray = explode("=", $countMatch[1]);
+							$newcount = ((int)($carray[1])) + 1;
+
+							$newcountstr = "COUNT=".$newcount;
+							$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
+
+							$rc = new When();
+							$rc->recur($comp)->rrule($temprrule);
+							
+							$d = $rc->next();
+						}
+
+						$d = $rc->next();
+					}
 				}
 				else
 				{
 					$rc->recur($start)->rrule($rrule);
 					$d = $rc->next();
-					if($d == $start) $d = $rc->next();
+					if(  $d == $start) 
+					{
+						if($count)
+						{
+							// Work around for When() lib behavior
+							$carray = explode("=", $countMatch[1]);
+							$newcount = ((int)($carray[1])) + 1;
+
+							$newcountstr = "COUNT=".$newcount;
+							$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
+
+							$rc = new When();
+							$rc->recur($start)->rrule($temprrule);
+							
+							$d = $rc->next();
+						}
+
+						$d = $rc->next();
+					}
 				}
 			}
 			catch(Exception $e)
@@ -252,7 +324,7 @@ function convertToRRule($text, $fromcomp)
 	{
 		$repeat = "PARENT";
 	}
-	elseif(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
+	elseif(($every!== $every<5) || ($each!== $each<5)){ // Every|Each X T
 	
 		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);		
 		if(empty($match[1])) $match[1] = 1;	// X
@@ -269,7 +341,7 @@ function convertToRRule($text, $fromcomp)
 		if(strpos($match[2],'fri')!==FALSE) { $repeat .= $and."FR"; $and=","; }
 		if(strpos($match[2],'sat')!==FALSE) { $repeat .= $and."SA"; $and=","; }
 		
-		if(strpos($match[2],'day')!==FALSE && empty($and)) $repeat="DAILY";
+		if(strpos($match[2],'day')!== empty($and)) $repeat="DAILY";
 		else if(strpos($match[2],'week')!==FALSE) $repeat="WEEKLY";
 		else if(strpos($match[2],'month')!==FALSE) $repeat="MONTHLY";
 		else if(strpos($match[2],'year')!==FALSE) $repeat="YEARLY";

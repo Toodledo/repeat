@@ -1,7 +1,7 @@
 <?php
 
-    //require_once 'PHPUnit/Autoload.php';
-    //require_once '../lib_ical.php';
+    require_once 'PHPUnit/Autoload.php';
+    require_once '../lib_ical.php';
 
     class GetNextDateTests extends PHPUnit_Framework_TestCase
     {
@@ -227,7 +227,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        // TODO: Fix when Monthly works, remove BYMONTHDAY=1
+        // TODO: Fix when Monthly works
         public function test_SimpleMonthly_FromDue()
         {
             $ical = "FREQ=MONTHLY;INTERVAL=2";
@@ -1025,7 +1025,7 @@
             $ical = "FREQ=MONTHLY;INTERVAL=1;FASTFORWARD";
 
             $today = new DateTime(date('Y-m-d H:i:s'));
-            $nextmonth = new DateTime(date('Y-m-d', strtotime('today + 32 day')));
+            $nextmonth = new DateTime(date('Y-m-d', strtotime('today + 1 month')));
 
             $start = new DateTime("January 1, 2013");
             $due = new DateTime("January 2, 2013");
@@ -1033,7 +1033,7 @@
 
             $array = getNextDates($start,$due,$comp,$ical);
             
-            $this->assertGreaterThan( $today, $array[1] );
+            $this->assertGreaterThan( $today->getTimestamp(), $array[1] );
             $this->assertLessThan( $nextmonth->getTimestamp(), $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
@@ -1057,7 +1057,7 @@
             $this->assertEquals( $ical, $array[2] );
         }
 
-        public function test_FastFoward_ByDay_Every()
+        public function test_FastFoward_WeeklyByDay_Every()
         {
             // Every Tuesday
             $ical = "FREQ=WEEKLY;BYDAY=TU;FASTFORWARD";
