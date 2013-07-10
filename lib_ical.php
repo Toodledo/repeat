@@ -324,8 +324,7 @@ function convertToRRule($text, $fromcomp)
 	{
 		$repeat = "PARENT";
 	}
-	elseif(($every!== $every<5) || ($each!== $each<5)){ // Every|Each X T
-	
+	elseif(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
 		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);		
 		if(empty($match[1])) $match[1] = 1;	// X
 		if(empty($match[2])) return "";		// T
@@ -341,7 +340,7 @@ function convertToRRule($text, $fromcomp)
 		if(strpos($match[2],'fri')!==FALSE) { $repeat .= $and."FR"; $and=","; }
 		if(strpos($match[2],'sat')!==FALSE) { $repeat .= $and."SA"; $and=","; }
 		
-		if(strpos($match[2],'day')!== empty($and)) $repeat="DAILY";
+		if(strpos($match[2],'day')!==FALSE && empty($and)) $repeat="DAILY";
 		else if(strpos($match[2],'week')!==FALSE) $repeat="WEEKLY";
 		else if(strpos($match[2],'month')!==FALSE) $repeat="MONTHLY";
 		else if(strpos($match[2],'year')!==FALSE) $repeat="YEARLY";

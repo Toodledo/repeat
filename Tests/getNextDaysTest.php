@@ -1,7 +1,7 @@
 <?php
 
-    require_once 'PHPUnit/Autoload.php';
-    require_once '../lib_ical.php';
+    //require_once 'PHPUnit/Autoload.php';
+    //require_once '../lib_ical.php';
 
     class GetNextDateTests extends PHPUnit_Framework_TestCase
     {
