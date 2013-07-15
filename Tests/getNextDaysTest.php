@@ -1,7 +1,7 @@
 <?php
 
-    require_once 'PHPUnit/Autoload.php';
-    require_once '../lib_ical.php';
+    //require_once 'PHPUnit/Autoload.php';
+    //require_once '../lib_ical.php';
 
     class GetNextDateTests extends PHPUnit_Framework_TestCase
     {
@@ -1081,17 +1081,19 @@
             // Every 2nd Tuesday
             $ical = "FREQ=MONTHLY;BYDAY=2TU;FASTFORWARD";
 
-            $start = new DateTime("January 6, 2010");
-            $due = new DateTime("January 8, 2010");
+            $start = new DateTime("January 10, 2010");
+            $due = new DateTime("January 12, 2010");
             $comp = 0;
+            
+            $today = new DateTime(date('Y-m-d'));
+            $nextTuesday = new DateTime(date('Y-m-d H:i:s', strtotime('second tuesday of this month')));
 
-            $today = new DateTime(date('Y-m-d H:i:s', strtotime('today')));
-            $nextmonth = new DateTime(date('Y-m-d H:i:s', strtotime('today + 30 day')));
+            if($nextTuesday <= $today)
+                $nextTuesday = new DateTime(date('Y-m-d H:i:s', strtotime('second tuesday of next month')));
 
             $array = getNextDates($start,$due,$comp,$ical);
         
-            $this->assertGreaterThan( $today->getTimestamp(), $array[1] );
-            $this->assertLessThan( $nextmonth->getTimestamp(), $array[1] );
+            $this->assertEquals( $nextTuesday->getTimestamp(), $array[1] );
             $this->assertEquals( $ical, $array[2] );
         }
 
@@ -1183,8 +1185,8 @@
             $due = new DateTime("January 2, 2012");
             $comp = 0;
 
-            $newstart = new DateTime("January 7, 2012"); 
-            $newdue = new DateTime("January 8, 2012");
+            $newstart = new DateTime("January 2, 2012"); 
+            $newdue = new DateTime("January 3, 2012");
             $newical = "FREQ=WEEKLY;BYDAY=TU;COUNT=1";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -1202,8 +1204,8 @@
             $due = new DateTime("January 2, 2012");
             $comp = 0;
 
-            $newstart = new DateTime("January 7, 2012"); 
-            $newdue = new DateTime("January 8, 2012");
+            $newstart = new DateTime("January 2, 2012"); 
+            $newdue = new DateTime("January 3, 2012");
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);

@@ -115,7 +115,7 @@ function getNextDates($start,$due,$comp,$rrule)
 			{
 				$rd->recur($due)->rrule($rrule);
 				$d = $rd->next();
-				if(  $d == $due) 
+				if($d == $due) 
 				{
 					if($count)
 					{
