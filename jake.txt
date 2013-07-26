@@ -1,0 +1,82 @@
+PHPUnit 3.7.19 by Sebastian Bergmann.
+
+Configuration read from /Users/jake/Sites/repeat/phpunit.xml.dist
+
+...............F.FFFF...FF..F.................................... 65 / 86 ( 75%)
+..F....FFFF..........
+
+Time: 2 seconds, Memory: 12.50Mb
+
+There were 13 failures:
+
+1) GetNextDateTests::test_BadParams4
+Failed asserting that 1325480400 matches expected 1325394000.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:77
+
+2) GetNextDateTests::test_UnixTimestamp_SimpleDaily
+Failed asserting that 1325491200 matches expected 1325480400.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:118
+
+3) GetNextDateTests::test_UnixTimestamp_SimpleDaily40
+Failed asserting that 1328860800 matches expected 1328850000.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:136
+
+4) GetNextDateTests::test_UnixTimestamp_SimpleWeekly
+Failed asserting that 1326614400 matches expected 1326603600.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:154
+
+5) GetNextDateTests::test_UnixTimestamp_SimpleYearly
+Failed asserting that 1357027200 matches expected 1357016400.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:172
+
+6) GetNextDateTests::test_SimpleMonthly_FromDue
+Failed asserting that 1359694800 matches expected 1362114000.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:245
+
+7) GetNextDateTests::test_SingleMonthly_FromDue
+Failed asserting that 1362286800 matches expected 1364702400.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:266
+
+8) GetNextDateTests::test_SimpleMonthly_FromStart
+Failed asserting that 1359694800 matches expected 1362114000.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:320
+
+9) GetNextDateTests::test_FastFoward_ByDay_2nd
+Failed asserting that 1376366400 is less than 1376107200.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:1094
+
+10) GetNextDateTests::test_Count_ByWeekAlmostLastTime
+Failed asserting that 1325480400 matches expected 1325912400.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:1192
+
+11) GetNextDateTests::test_Count_ByWeekLastTime
+Failed asserting that 1325480400 matches expected 1325912400.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:1211
+
+12) GetNextDateTests::test_Count_ByMonthDayAlmostLastTime
+Failed asserting that 1328331600 matches expected 1328158800.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:1230
+
+13) GetNextDateTests::test_Count_ByMonthDayLastTime
+Failed asserting that 1328331600 matches expected 1328158800.
+
+/Users/jake/Sites/repeat/Tests/getNextDaysTest.php:1249
+
+FAILURES!
+Tests: 86, Assertions: 243, Failures: 13.
+
+Generating code coverage report in Clover XML format ... done
+
+Generating code coverage report in HTML format ... done

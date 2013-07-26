@@ -1,6 +1,7 @@
 <?php
 
 require_once 'When.php';	// Include When library	
+date_default_timezone_set('America/Los_Angeles');//New_York
 
 function getNextDates($start,$due,$comp,$rrule)		
 {
