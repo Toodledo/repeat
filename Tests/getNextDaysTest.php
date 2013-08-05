@@ -1,7 +1,7 @@
 <?php
 
-    //require_once 'PHPUnit/Autoload.php';
-    //require_once '../lib_ical.php';
+    require_once 'PHPUnit/Autoload.php';
+    require_once '../lib_ical.php';
 
     class GetNextDateTests extends PHPUnit_Framework_TestCase
     {
@@ -1223,8 +1223,8 @@
             $due = new DateTime("January 21, 2012");
             $comp = 0;
 
-            $newstart = new DateTime("February 02, 2012"); 
-            $newdue = new DateTime("February 12, 2012");
+            $newstart = new DateTime("February 4, 2012"); 
+            $newdue = new DateTime("February 14, 2012");
             $newical = "FREQ=MONTHLY;BYDAY=2TU;COUNT=1";
 
             $array = getNextDates($start,$due,$comp,$ical);
@@ -1242,8 +1242,8 @@
             $due = new DateTime("January 21, 2012");
             $comp = 0;
 
-            $newstart = new DateTime("February 02, 2012"); 
-            $newdue = new DateTime("February 12, 2012");
+            $newstart = new DateTime("February 4, 2012"); 
+            $newdue = new DateTime("February 14, 2012");
             $newical = "";
 
             $array = getNextDates($start,$due,$comp,$ical);

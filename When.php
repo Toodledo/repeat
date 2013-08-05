@@ -50,6 +50,8 @@ class When
 
 	protected $keep_first_month_day;
 
+	protected $byArray;
+
 	/**
 	 * __construct
 	 */
@@ -96,6 +98,8 @@ class When
 		$this->valid_week_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
 
 		$this->valid_frequency = array('SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY');
+
+		$this->byArray = array("BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY", "BYYEARDAY", "BYWEEKNO", "BYMONTH", "BYSETPOS", "WKST");
 	}
 
 	/**
@@ -133,6 +137,11 @@ class When
 	{
 		if(in_array(strtoupper($frequency), $this->valid_frequency))
 		{
+			if($frequency == 'MONTHLY')
+			{
+    			$this->bymonthday([$this->start_date->format('d')]);
+			}
+
 			$this->frequency = strtoupper($frequency);
 		}
 		else
@@ -151,6 +160,17 @@ class When
 
 		$parts = explode(";", $rrule);
 
+		$byMonthDay = true;
+
+		foreach($parts as $part)
+		{
+			list($rule, $param) = explode("=", $part);
+			$rule = strtoupper($rule);
+			$param = strtoupper($param);
+			if (in_array($rule, $this->byArray))
+				$byMonthDay = false;
+		}		
+
 		foreach($parts as $part)
 		{
 			list($rule, $param) = explode("=", $part);
@@ -161,7 +181,14 @@ class When
 			switch($rule)
 			{
 				case "FREQ":
-					$this->frequency = $param;
+					if($param == "MONTHLY" && $byMonthDay)
+					{
+						$this->freq($param);
+					}
+					else
+					{
+						$this->frequency = $param;
+					}
 					break;
 				case "UNTIL":
 					$this->until($param);
