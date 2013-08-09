@@ -79,6 +79,22 @@
             $this->assertEquals( $newical, $array[2] );
         }
 
+        public function test_NoRepeat()
+        {
+            $ical = "";
+
+            $start = new DateTime("January 1, 2012");
+            $due = new DateTime("January 10, 2012");
+            $comp = 0;
+            
+            $newical = "";
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $start->getTimestamp(), $array[0], "start");
+            $this->assertEquals( $due->getTimestamp(), $array[1], "due" );
+            $this->assertEquals( $newical, $array[2] );
+        }
 
         /*
             TESTS FOR SIMPLE INTERVALS (EVERY X T)

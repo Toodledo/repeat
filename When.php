@@ -101,7 +101,9 @@ class When
 
 		$this->valid_frequency = array('SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY');
 
+		//** ADDED BY TOODLEDO  START **//
 		$this->byArray = array("BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY", "BYYEARDAY", "BYWEEKNO", "BYMONTH", "BYSETPOS", "WKST");
+		//** ADDED BY TOODLEDO  END **//
 	}
 
 	/**
@@ -139,14 +141,15 @@ class When
 	{
 		if(in_array(strtoupper($frequency), $this->valid_frequency))
 		{
-			if($frequency == 'MONTHLY')
+			//** ADDED BY TOODLEDO  START **//
+			if($frequency == 'MONTHLY') //add byMonthDay rule to hack around when library bug
 			{
     			$this->bymonthday( array($this->start_date->format('d')) );
 			}
-
+			//** ADDED BY TOODLEDO  END **//
 			$this->frequency = strtoupper($frequency);
 		}
-		else
+		else if($frequency!=='') //** TOODLEDO ADDED IF CLAUSE TO ALLOW NO REPEAT **//
 		{
 			throw new InvalidArgumentException('Invalid frequency type.');
 		}
@@ -162,8 +165,10 @@ class When
 
 		$parts = explode(";", $rrule);
 
+		//** ADDED BY TOODLEDO  START **//
+		//determine if the rrule already has a by rule in it.
+		//if not, we are able to add the byMonthDay hack if necessary
 		$byMonthDay = true;
-
 		foreach($parts as $part)
 		{
 			list($rule, $param) = explode("=", $part);
@@ -172,6 +177,8 @@ class When
 			if (in_array($rule, $this->byArray))
 				$byMonthDay = false;
 		}		
+		//** ADDED BY TOODLEDO  END **//
+
 
 		foreach($parts as $part)
 		{
@@ -183,12 +190,15 @@ class When
 			switch($rule)
 			{
 				case "FREQ":
-					if($param == "MONTHLY" && $byMonthDay)
+					//** ADDED BY TOODLEDO  START **//
+					if($param == "MONTHLY" && $byMonthDay) 
 					{
+						//This is a monthly rule that needs (and can have) the byMonthDay hack to work aroud bug in when library
 						$this->freq($param);
 					}
 					else
 					{
+					//** ADDED BY TOODLEDO  END **//
 						$this->frequency = $param;
 					}
 					break;

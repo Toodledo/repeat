@@ -53,42 +53,42 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(!($comp instanceof DateTime)) $comp = 0;
 	}	
 	
-    $rs = new When();
-    $rd = new When();
-    $rc = new When();    
-            
-    $newstart = null;
-    $newdue = null;
-    $newrrule = $rrule;    
+	$rs = new When();
+	$rd = new When();
+	$rc = new When();    
+			
+	$newstart = null;
+	$newdue = null;
+	$newrrule = $rrule;    
 
-    // Optional Rules
-    $fromComp = false;
-    $fastFoward = false;
-    $count = false;
-    $subtractCount = 1;
+	// Optional Rules
+	$fromComp = false;
+	$fastFoward = false;
+	$count = false;
+	$subtractCount = 1;
 
-    $match = array();
-    preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
-    $fromComp = !empty($match[1]) && !empty($comp) && $comp !== 0;   
+	$match = array();
+	preg_match("/(FROMCOMP[;]?)/i",$rrule,$match);            
+	$fromComp = !empty($match[1]) && !empty($comp) && $comp !== 0;   
 
-    $match = array();
-    preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
-    $fastFoward = !empty($match[1]);    
+	$match = array();
+	preg_match("/(FASTFORWARD[;]?)/i",$rrule,$match);            
+	$fastFoward = !empty($match[1]);    
 
-    $countMatch = array();
-    preg_match("/(COUNT=([0-9]*)[;]?)/i",$rrule,$countMatch);
-    $count = !empty($countMatch[1]);
+	$countMatch = array();
+	preg_match("/(COUNT=([0-9]*)[;]?)/i",$rrule,$countMatch);
+	$count = !empty($countMatch[1]);
 
-    if( $fromComp ) $rrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
-    if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $rrule);
+	if( $fromComp ) $rrule = preg_replace("/FROMCOMP[;]?/i", "", $rrule);
+	if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $rrule);
 
-   	// Calculate DUE date
-    if( $due === 0) {
-        $newdue = 0;
-    } else {
-    	try {
-			if($fromComp) {
-				$rd->recur($comp)->rrule($rrule);
+	// Calculate DUE date
+	if( $due === 0) {
+	 	$newdue = 0;
+	} else {
+		try {
+			if($fromComp) { //repeat from completion
+				$rd->recur($comp,'')->rrule($rrule);
 				$d = $rd->next();
 				if($d == $comp) {
 					if($count) {
@@ -100,15 +100,15 @@ function getNextDates($start,$due,$comp,$rrule)
 						$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
 
 						$rd = new When();
-						$rd->recur($comp)->rrule($temprrule);
+						$rd->recur($comp,'')->rrule($temprrule);
 						
 						$d = $rd->next();
 					}
 
 					$d = $rd->next();	
 				}
-			} else {
-				$rd->recur($due)->rrule($rrule);
+			} else { //repeat from due-date
+				$rd->recur($due,'')->rrule($rrule);
 				$d = $rd->next();
 				if($d == $due) {
 					if($count) {
@@ -120,45 +120,46 @@ function getNextDates($start,$due,$comp,$rrule)
 						$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
 
 						$rd = new When();
-						$rd->recur($due)->rrule($temprrule);
+						$rd->recur($due,'')->rrule($temprrule);
 						
 						$d = $rd->next();
 					}
-
-					$d = $rd->next();				
+					$d = $rd->next();
 				}				
 			}
 		} catch(Exception $e) {
+			//failed to parse iCal rule
 			return array($start->getTimestamp(),$due->getTimestamp(),"");
 		}
 
-        // No next occuraence
-        if( !( $d instanceof DateTime) ) {
-        	return $noNextOccur;
-        }
+		// No next occuraence
+		if( !( $d instanceof DateTime) ) {
+			return $noNextOccur;
+		}
 
-        if($fastFoward) {
-	        while( true ) {
-	        	$d = $rd->next();
-	            if(!($d instanceof DateTime)) {
-	                return $noNextOccur;
-	            } else if ($d > $today) {
-	            	if($fromComp) {
-				        $subtractCount = $comp->diff($d)->days;
-			    	} else {
-			    		$subtractCount = $due->diff($d)->days;	
-			    	}
-	            	break;
-	            }	            
-	        }	       
-        } 
+		//fast forward to the next future date
+		if($fastFoward) {
+		  	while( true ) {
+				$d = $rd->next();
+				if(!($d instanceof DateTime)) {
+					 return $noNextOccur;
+				} else if ($d > $today) {
+					if($fromComp) {
+					  $subtractCount = $comp->diff($d)->days;
+					} else {
+						$subtractCount = $due->diff($d)->days;	
+					}
+					break;
+				}	            
+		  	}	       
+		}
 
-        // No next occurence after returned one
-        if( !( $rd->next() instanceof DateTime ) ) {
-        	$newrrule = "";
-        }		
+		// No next occurence after returned one
+		if( !( $rd->next() instanceof DateTime ) ) {
+			$newrrule = "";
+		}		
 
-        $newdue = $d->getTimestamp();
+		$newdue = $d->getTimestamp();
 
 		if($start !== 0) {
 			$newstart = clone $d;
@@ -167,16 +168,16 @@ function getNextDates($start,$due,$comp,$rrule)
 		} else {
 			$newstart = 0;
 		}
-    }
+	}
 
-    // Calculate START date if not already done
-    if($newstart === null) {
-    	if( $start === 0) {
-		    $newstart = 0;
+	// Calculate START date if not already done
+	if($newstart === null) {
+		if( $start === 0) {
+			 $newstart = 0;
 		} else {
-        	try {
+			try {
 				if($fromComp) {
-					$rc->recur($comp)->rrule($rrule);
+					$rc->recur($comp,'')->rrule($rrule);
 					$d = $rc->next();
 					if($d == $comp) {
 						if($count) {
@@ -188,7 +189,7 @@ function getNextDates($start,$due,$comp,$rrule)
 							$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
 
 							$rc = new When();
-							$rc->recur($comp)->rrule($temprrule);
+							$rc->recur($comp,'')->rrule($temprrule);
 							
 							$d = $rc->next();
 						}
@@ -196,7 +197,7 @@ function getNextDates($start,$due,$comp,$rrule)
 						$d = $rc->next();
 					}
 				} else {
-					$rc->recur($start)->rrule($rrule);
+					$rc->recur($start,'')->rrule($rrule);
 					$d = $rc->next();
 					if(  $d == $start) {
 						if($count) {
@@ -208,7 +209,7 @@ function getNextDates($start,$due,$comp,$rrule)
 							$temprrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $rrule);
 
 							$rc = new When();
-							$rc->recur($start)->rrule($temprrule);
+							$rc->recur($start,'')->rrule($temprrule);
 							
 							$d = $rc->next();
 						}
@@ -217,50 +218,52 @@ function getNextDates($start,$due,$comp,$rrule)
 					}
 				}
 			} catch(Exception $e) {
-				return array($start->getTimestamp(),$due->getTimestamp(),"");
+				echo "excepto";
+				if($due!==0) $due = $due->getTimestamp();
+				if($start!==0) $start = $start->getTimestamp();
+				return array($start,$due,"");
 			}
 
 			// No next occuraence
-	        if( !( $d instanceof DateTime) ) {
-	        	return $noNextOccur;
-	        }
+			if( !( $d instanceof DateTime) ) {
+				return $noNextOccur;
+			}
 
-	        if($fastFoward) {
-		        while( true ) {
-		        	$d = $rs->next();
-		            if(!($d instanceof DateTime)) {
-		                return $noNextOccur;
-		            } else if ($d > $today) {
-		            	if($fromComp) {
-					        $subtractCount = $comp->diff($d)->days;
-				    	} else {
-				    		$subtractCount = $due->diff($d)->days;	
-				    	}
+			if($fastFoward) {
+			  	while( true ) {
+					$d = $rs->next();
+					if(!($d instanceof DateTime)) {
+						return $noNextOccur;
+					} else if ($d > $today) {
+						if($fromComp) {
+						  $subtractCount = $comp->diff($d)->days;
+						} else {
+							$subtractCount = $due->diff($d)->days;	
+						}
+						break;
+					}
+			  	}
+			}
 
-		            	break;
-		            }
-		        }
-	    	}
-
-	        // No next occurence after returned one
-            if( !( $rc->next() instanceof DateTime ) ) {
-            	$newrrule = "";
-            }
+			 // No next occurence after returned one
+			if( !( $rc->next() instanceof DateTime ) ) {
+				$newrrule = "";
+			}
 
 			$newstart = $d->getTimestamp();
-        }        
-    }   
+		}        
+	}   
 
-    // Update COUNT flag if exists and new rrule being returned
-    if($count && $newrrule != "") {
-    	$carray = explode("=", $countMatch[1]);
+	// Update COUNT flag if exists and new rrule being returned
+	if($count && $newrrule != "") {
+		$carray = explode("=", $countMatch[1]);
 		$newcount = ((int)($carray[1])) - $subtractCount;		
 
 		$newcountstr = "COUNT=".$newcount;
 		$newrrule = preg_replace("/(COUNT=[0-9]*)/i", $newcountstr, $newrrule);    	
-    }
+	}
 
-    return array($newstart,$newdue,$newrrule);
+	return array($newstart,$newdue,$newrrule);
 } 
 
 /*
@@ -339,8 +342,8 @@ function convertToRRule($text, $fromcomp)
 		$repeat = "FREQ=MONTHLY;BYDAY=".$num.$day;
 	}
 	
-   if($fromcomp) $repeat.=";FROMCOMP";
-        
+	if($fromcomp) $repeat.=";FROMCOMP";
+		  
 	return $repeat;
 }
 
