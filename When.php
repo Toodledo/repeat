@@ -6,6 +6,8 @@
  * Created: September 2010
  * Description: Determines the next date of recursion given an iCalendar "rrule" like pattern.
  * Requirements: PHP 5.3+ - makes extensive use of the Date and Time library (http://us2.php.net/manual/en/book.datetime.php)
+ *
+ * Modified by Toodledo to work around Monthly repeat but in original library
  */
 class When
 {
@@ -139,7 +141,7 @@ class When
 		{
 			if($frequency == 'MONTHLY')
 			{
-    			$this->bymonthday([$this->start_date->format('d')]);
+    			$this->bymonthday( array($this->start_date->format('d')) );
 			}
 
 			$this->frequency = strtoupper($frequency);

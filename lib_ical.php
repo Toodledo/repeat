@@ -3,21 +3,28 @@
 require_once 'When.php';	// Include When library	
 date_default_timezone_set('America/Los_Angeles');//New_York
 
+/*
+	Given a start date, duedate, completion date and rrule string, finds and returns the new values.
+
+	$start = unix timestamp or DateTime object
+	$due =  unix timestamp or DateTime object
+	$comp =  unix timestamp or DateTime object
+	$rrule = string
+
+	returns array(newStart, newDue, newiCal)
+*/
 function getNextDates($start,$due,$comp,$rrule)		
 {
 	$noNextOccur = array(-1,-1,"");
 	$today = new DateTime(date('Y-m-d H:i:s'));
 
-	if($start === 0 && $due === 0)
-	{
+	if($start === 0 && $due === 0) {
 		$due = $today;
 	}
 
 	// If start and due are timestamps, convert them to dates
-	if($start !== 0)
-	{
-		if(is_int($start)) 
-		{
+	if($start !== 0) {
+		if(is_int($start)) {
 			$s = new DateTime();
 			$s->setTimestamp($start);
 			$start = $s;
@@ -26,10 +33,8 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(!($start instanceof DateTime)) $start = 0;
 	}
 
-	if($due !== 0)
-	{
-		if(is_int($due)) 
-		{
+	if($due !== 0) {
+		if(is_int($due)) {
 			$d = new DateTime();
 			$d->setTimestamp($due);
 			$due = $d;
@@ -38,10 +43,8 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(!($due instanceof DateTime)) $due = 0;
 	}
 
-	if($comp !== 0)
-	{
-		if(is_int($comp)) 
-		{
+	if($comp !== 0) {
+		if(is_int($comp)) {
 			$d = new DateTime();
 			$d->setTimestamp($comp);
 			$comp = $d;
@@ -80,22 +83,15 @@ function getNextDates($start,$due,$comp,$rrule)
     if( $fastFoward ) $rrule = preg_replace("/FASTFORWARD[;]?/i", "", $rrule);
 
    	// Calculate DUE date
-    if( $due === 0)
-    {
+    if( $due === 0) {
         $newdue = 0;
-    }
-    else
-    {
-    	try
-		{
-			if($fromComp)
-			{
+    } else {
+    	try {
+			if($fromComp) {
 				$rd->recur($comp)->rrule($rrule);
 				$d = $rd->next();
-				if(  $d == $comp) 
-				{
-					if($count)
-					{
+				if($d == $comp) {
+					if($count) {
 						// Work around for When() lib behavior
 						$carray = explode("=", $countMatch[1]);
 						$newcount = ((int)($carray[1])) + 1;
@@ -111,15 +107,11 @@ function getNextDates($start,$due,$comp,$rrule)
 
 					$d = $rd->next();	
 				}
-			}
-			else
-			{
+			} else {
 				$rd->recur($due)->rrule($rrule);
 				$d = $rd->next();
-				if($d == $due) 
-				{
-					if($count)
-					{
+				if($d == $due) {
+					if($count) {
 						// Work around for When() lib behavior
 						$carray = explode("=", $countMatch[1]);
 						$newcount = ((int)($carray[1])) + 1;
@@ -136,35 +128,24 @@ function getNextDates($start,$due,$comp,$rrule)
 					$d = $rd->next();				
 				}				
 			}
-		}
-		catch(Exception $e)
-		{
+		} catch(Exception $e) {
 			return array($start->getTimestamp(),$due->getTimestamp(),"");
 		}
 
         // No next occuraence
-        if( !( $d instanceof DateTime) )
-        {
+        if( !( $d instanceof DateTime) ) {
         	return $noNextOccur;
         }
 
-        if($fastFoward)
-        {
-	        while( true )
-	        {
+        if($fastFoward) {
+	        while( true ) {
 	        	$d = $rd->next();
-	            if(!($d instanceof DateTime))
-	            {
+	            if(!($d instanceof DateTime)) {
 	                return $noNextOccur;
-	            }
-	            elseif ($d > $today)
-	            {
-	            	if($fromComp)
-			        {
+	            } else if ($d > $today) {
+	            	if($fromComp) {
 				        $subtractCount = $comp->diff($d)->days;
-			    	}
-			    	else
-			    	{
+			    	} else {
 			    		$subtractCount = $due->diff($d)->days;	
 			    	}
 	            	break;
@@ -173,44 +154,32 @@ function getNextDates($start,$due,$comp,$rrule)
         } 
 
         // No next occurence after returned one
-        if( !( $rd->next() instanceof DateTime ) )
-        {
+        if( !( $rd->next() instanceof DateTime ) ) {
         	$newrrule = "";
         }		
 
         $newdue = $d->getTimestamp();
 
-		if($start !== 0)
-		{
+		if($start !== 0) {
 			$newstart = clone $d;
 			$newstart->sub($start->diff($due));
 			$newstart = $newstart->getTimestamp();
-		}
-		else
-		{
+		} else {
 			$newstart = 0;
 		}
     }
 
     // Calculate START date if not already done
-    if($newstart === null)   
-    {
-    	if( $start === 0)
-		{
+    if($newstart === null) {
+    	if( $start === 0) {
 		    $newstart = 0;
-		}
-        else
-        {
-        	try
-			{
-				if($fromComp)
-				{
+		} else {
+        	try {
+				if($fromComp) {
 					$rc->recur($comp)->rrule($rrule);
 					$d = $rc->next();
-					if(  $d == $comp) 
-					{
-						if($count)
-						{
+					if($d == $comp) {
+						if($count) {
 							// Work around for When() lib behavior
 							$carray = explode("=", $countMatch[1]);
 							$newcount = ((int)($carray[1])) + 1;
@@ -226,15 +195,11 @@ function getNextDates($start,$due,$comp,$rrule)
 
 						$d = $rc->next();
 					}
-				}
-				else
-				{
+				} else {
 					$rc->recur($start)->rrule($rrule);
 					$d = $rc->next();
-					if(  $d == $start) 
-					{
-						if($count)
-						{
+					if(  $d == $start) {
+						if($count) {
 							// Work around for When() lib behavior
 							$carray = explode("=", $countMatch[1]);
 							$newcount = ((int)($carray[1])) + 1;
@@ -251,35 +216,24 @@ function getNextDates($start,$due,$comp,$rrule)
 						$d = $rc->next();
 					}
 				}
-			}
-			catch(Exception $e)
-			{
+			} catch(Exception $e) {
 				return array($start->getTimestamp(),$due->getTimestamp(),"");
 			}
 
 			// No next occuraence
-	        if( !( $d instanceof DateTime) )
-	        {
+	        if( !( $d instanceof DateTime) ) {
 	        	return $noNextOccur;
 	        }
 
-	        if($fastFoward)
-	        {
-		        while( true )
-		        {
+	        if($fastFoward) {
+		        while( true ) {
 		        	$d = $rs->next();
-		            if(!($d instanceof DateTime))
-		            {
+		            if(!($d instanceof DateTime)) {
 		                return $noNextOccur;
-		            }
-		            elseif ($d > $today)
-		            {
-		            	if($fromComp)
-				        {
+		            } else if ($d > $today) {
+		            	if($fromComp) {
 					        $subtractCount = $comp->diff($d)->days;
-				    	}
-				    	else
-				    	{
+				    	} else {
 				    		$subtractCount = $due->diff($d)->days;	
 				    	}
 
@@ -289,8 +243,7 @@ function getNextDates($start,$due,$comp,$rrule)
 	    	}
 
 	        // No next occurence after returned one
-            if( !( $rc->next() instanceof DateTime ) )
-            {
+            if( !( $rc->next() instanceof DateTime ) ) {
             	$newrrule = "";
             }
 
@@ -299,8 +252,7 @@ function getNextDates($start,$due,$comp,$rrule)
     }   
 
     // Update COUNT flag if exists and new rrule being returned
-    if($count && $newrrule != "")
-    {
+    if($count && $newrrule != "") {
     	$carray = explode("=", $countMatch[1]);
 		$newcount = ((int)($carray[1])) - $subtractCount;		
 
@@ -311,7 +263,14 @@ function getNextDates($start,$due,$comp,$rrule)
     return array($newstart,$newdue,$newrrule);
 } 
 
-//converts our repeat strings into iCal RRULEs
+/*
+	Converts Toodledo's old repeat strings into iCal RRULEs
+	$text = the "repeatA" field from the db.  Old "repeat" number will need to be pre-conveted into repeatA
+	$fromComp = boolean if we should repeat from the completion date. false means repeat from due-date (default)
+
+	No external dependencies
+*/
+
 function convertToRRule($text, $fromcomp) 
 {
 	$repeat = '';
@@ -321,11 +280,9 @@ function convertToRRule($text, $fromcomp)
 	$each = strpos($text,'each');
 	$parent = strpos($text,'parent');
 	
-	if($parent !== FALSE)
-	{
+	if($parent !== FALSE) {
 		$repeat = "PARENT";
-	}
-	elseif(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
+	} else if(($every!==FALSE && $every<5) || ($each!==FALSE && $each<5)){ // Every|Each X T
 		preg_match("/[a-z]* ([0-9]*)([a-z ,]*)/i",$text,$match);		
 		if(empty($match[1])) $match[1] = 1;	// X
 		if(empty($match[2])) return "";		// T
@@ -387,7 +344,7 @@ function convertToRRule($text, $fromcomp)
 	return $repeat;
 }
 
-//converts iCal RRULEs back into our repeat strings
+//converts iCal RRULEs back into old Toodledo repeatA strings
 function iCalReverseRepeat($freq, $interval, $byday) {
 	$ret = "";	
 	

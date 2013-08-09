@@ -74,8 +74,8 @@
 
             $array = getNextDates($start,$due,$comp,$ical);
 
-            $this->assertEquals( $start->getTimestamp(), $array[0] );
-            $this->assertEquals( $due->getTimestamp(), $array[1] );
+            $this->assertEquals( $start->getTimestamp(), $array[0], "start");
+            $this->assertEquals( $due->getTimestamp(), $array[1], "due" );
             $this->assertEquals( $newical, $array[2] );
         }
 
