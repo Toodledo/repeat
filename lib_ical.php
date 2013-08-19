@@ -1,7 +1,6 @@
 <?php
 
-require_once 'When.php';	// Include When library	
-date_default_timezone_set('America/Los_Angeles');//New_York
+require_once 'When.php';	// Include When library
 
 /*
 	Given a start date, duedate, completion date and rrule string, finds and returns the new values.
@@ -27,6 +26,7 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(is_int($start)) {
 			$s = new DateTime();
 			$s->setTimestamp($start);
+			$s->setTimezone(new DateTimeZone(date_default_timezone_get()));
 			$start = $s;
 		}
 
@@ -37,6 +37,7 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(is_int($due)) {
 			$d = new DateTime();
 			$d->setTimestamp($due);
+			$d->setTimezone(new DateTimeZone(date_default_timezone_get()));
 			$due = $d;
 		}
 
@@ -47,6 +48,7 @@ function getNextDates($start,$due,$comp,$rrule)
 		if(is_int($comp)) {
 			$d = new DateTime();
 			$d->setTimestamp($comp);
+			$d->setTimezone(new DateTimeZone(date_default_timezone_get()));
 			$comp = $d;
 		}
 

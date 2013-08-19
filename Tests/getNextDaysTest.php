@@ -1496,5 +1496,65 @@
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
             $this->assertEquals( $newical, $array[2] );           
         }
+
+        public function test_Timezone1()
+        {
+            date_default_timezone_set("America/Los_Angeles");
+
+            $ical = "FREQ=DAILY;INTERVAL=1";
+
+            $start = 0;
+            $due = new DateTime("January 1, 2013");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 2, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue->getTimestamp(), $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_Timezone2()
+        {
+            date_default_timezone_set("America/New_York");
+
+            $ical = "FREQ=DAILY;INTERVAL=1";
+
+            $start = 0;
+            $due = new DateTime("January 1, 2013");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 2, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue->getTimestamp(), $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
+
+        public function test_Timezone3()
+        {
+            date_default_timezone_set("Asia/Muscat");
+
+            $ical = "FREQ=DAILY;INTERVAL=1";
+
+            $start = 0;
+            $due = new DateTime("January 1, 2013");
+            $comp = 0;
+
+            $newstart = 0;
+            $newdue = new DateTime("January 2, 2013");
+
+            $array = getNextDates($start,$due,$comp,$ical);
+
+            $this->assertEquals( $newstart, $array[0] );
+            $this->assertEquals( $newdue->getTimestamp(), $array[1] );
+            $this->assertEquals( $ical, $array[2] );
+        }
     }
 ?>
