@@ -1,6 +1,6 @@
 <?php
     
-    require_once 'lib_ical.php';    
+    require_once 'repeat.php';    
     
     // Get rrule string
     $rr = convertToRRule("Every Week", true);    

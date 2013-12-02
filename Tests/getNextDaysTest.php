@@ -19,7 +19,7 @@
             $newstart = 0;
             $newdue = 0;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -37,7 +37,7 @@
             $newstart = new DateTime("January 2, 2012");
             $newdue = 0;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -55,7 +55,7 @@
             $newstart = new DateTime("January 2, 2012");
             $newdue = new DateTime("January 11, 2012");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -72,7 +72,7 @@
             
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $start->getTimestamp(), $array[0], "start");
             $this->assertEquals( $due->getTimestamp(), $array[1], "due" );
@@ -89,7 +89,7 @@
             
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $start->getTimestamp(), $array[0], "start");
             $this->assertEquals( $due->getTimestamp(), $array[1], "due" );
@@ -110,7 +110,7 @@
             $newstart = 0;
             $newdue = new DateTime(date('Y-m-d H:i:s', strtotime('now + 24 hours'))); //Tomorrow            
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -128,7 +128,7 @@
             $newstart = 0;
             $newdue = 1325491200; //Jan 2
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -146,7 +146,7 @@
             $newstart = 0;
             $newdue = 1328860800;//new DateTime("February 10, 2012");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -164,7 +164,7 @@
             $newstart = 0;
             $newdue = 1326614400;//new DateTime("January 15, 2012");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -182,7 +182,7 @@
             $newstart = 0;
             $newdue = 1357027200;//new DateTime("January 1, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -200,7 +200,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -218,7 +218,7 @@
             $newstart = 0;
             $newdue = new DateTime("March 1, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -236,7 +236,7 @@
             $newstart = 0;
             $newdue = new DateTime("February 29, 2016");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -255,7 +255,7 @@
             $newstart = 0;
             $newdue = new DateTime("March 1, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -276,7 +276,7 @@
             $newstart = 0;
             $newdue = new DateTime("March 31, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -294,7 +294,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 1, 2015");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -312,7 +312,7 @@
             $newstart = new DateTime("January 2, 2013");
             $newdue = 0;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -331,7 +331,7 @@
             $newstart = new DateTime("March 1, 2013");
             $newdue = 0;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
         
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -349,7 +349,7 @@
             $newstart = new DateTime("January 1, 2015");
             $newdue = 0;                
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -368,7 +368,7 @@
             $newstart = new DateTime("January 1, 2015");
             $newdue = new DateTime("January 2, 2015");;                
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -391,7 +391,7 @@
             $newstart = new DateTime("February 8, 2013");
             $newdue = new DateTime("February 12, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -410,7 +410,7 @@
             $newstart = new DateTime("February 16, 2013");
             $newdue = new DateTime("February 17, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -429,7 +429,7 @@
             $newstart = new DateTime("January 29, 2013");
             $newdue = new DateTime("January 30, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -448,7 +448,7 @@
             $newstart = new DateTime("February 17, 2013");
             $newdue = new DateTime("February 27, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -471,7 +471,7 @@
             $newstart = new DateTime("January 4, 2013");
             $newdue = new DateTime("January 8, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -490,7 +490,7 @@
             $newstart = new DateTime("January 10, 2013");
             $newdue = new DateTime("January 18, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -509,7 +509,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 13, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -528,7 +528,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 19, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -548,7 +548,7 @@
             $newstart = new DateTime("January 6, 2013");
             $newdue = new DateTime("January 14, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -573,7 +573,7 @@
             $newdue = -1;                
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -593,7 +593,7 @@
             $newdue = -1;                
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -613,7 +613,7 @@
             $newdue = -1;                
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -633,7 +633,7 @@
             $newdue = new DateTime("January 2, 2013");
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -653,7 +653,7 @@
             $newdue = new DateTime("January 2, 2013");
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -673,7 +673,7 @@
             $newdue = new DateTime("January 27, 2013");
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -693,7 +693,7 @@
             $newdue = new DateTime("January 27, 2013");
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -713,7 +713,7 @@
             $newdue = new DateTime("January 2, 2014");
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -733,7 +733,7 @@
             $newdue = new DateTime("January 1, 2014");
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -753,7 +753,7 @@
             $newdue = 0;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -773,7 +773,7 @@
             $newdue = -1;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -793,7 +793,7 @@
             $newdue = new DateTime("January 15, 2013");;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -813,7 +813,7 @@
             $newdue = -1;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -833,7 +833,7 @@
             $newdue = new DateTime("February 12, 2013");
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -855,7 +855,7 @@
             $newdue = new DateTime("January 6, 2013");  
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -875,7 +875,7 @@
             $newdue = new DateTime("February 5, 2013");
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -894,7 +894,7 @@
             $newdue = new DateTime("January 12, 2013");
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -913,7 +913,7 @@
             $newdue = new DateTime("January 5, 2014");
             $newical = $ical;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -931,7 +931,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 5, 2014");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -949,7 +949,7 @@
             $newstart = new DateTime("January 5, 2014");
             $newdue = 0;
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -968,7 +968,7 @@
             $newstart = 0;
             $newdue = new DateTime("March 12, 2013");           
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -987,7 +987,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 22, 2013");           
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1008,7 +1008,7 @@
             $due = new DateTime("January 2, 2013");
             $comp = new DateTime("January 5, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $today->getTimestamp(), $array[0] );
             $this->assertEquals( $tomorow->getTimestamp(), $array[1] );
@@ -1027,7 +1027,7 @@
             $comp = 0;
 
             // This takes Jan 2 and moves it foward a week at a time until it is not in the past
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $start, $array[0] );
             $this->assertGreaterThan( $today->getTimestamp(), $array[1] );
@@ -1047,7 +1047,7 @@
             $due = new DateTime("January 2, 2013");
             $comp = new DateTime("January 5, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertGreaterThan( $today->getTimestamp(), $array[1] );
             $this->assertLessThan( $nextmonth->getTimestamp(), $array[1] );
@@ -1066,7 +1066,7 @@
             $newstart = new DateTime("January 1, 2014");
             $newdue = new DateTime("January 2, 2014");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
         
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1082,11 +1082,11 @@
             $due = 1357632000;//new DateTime("January 8, 2010");
             $comp = 0;
 
-            $newdue = new DateTime(date('Y-m-d H:i:s', strtotime('next Tuesday EST 2am ')));
+            $newdue = new DateTime(date('Y-m-d H:i:s', strtotime('next Tuesday GMT 8am ')));
             $newstart = $newdue->getTimestamp()-86400*2;
 
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
 
             $this->assertEquals( $newstart, $array[0] );
@@ -1109,7 +1109,7 @@
             if($nextTuesday <= $today)
                 $nextTuesday = new DateTime(date('Y-m-d H:i:s', strtotime('second tuesday of next month')));
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
         
             $this->assertEquals( $nextTuesday->getTimestamp(), $array[1] );
             $this->assertEquals( $ical, $array[2] );
@@ -1130,7 +1130,7 @@
             $newdue = new DateTime("January 3, 2012");
             $newical = "FREQ=DAILY;INTERVAL=1;COUNT=4";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1149,7 +1149,7 @@
             $newdue = new DateTime("January 3, 2012");
             $newical = "FREQ=DAILY;INTERVAL=1;COUNT=1";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1168,7 +1168,7 @@
             $newdue = new DateTime("January 3, 2012");
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1187,7 +1187,7 @@
             $newdue = -1;
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -1207,7 +1207,7 @@
             $newdue = new DateTime("January 3, 2012");
             $newical = "FREQ=WEEKLY;BYDAY=TU;COUNT=1";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1226,7 +1226,7 @@
             $newdue = new DateTime("January 3, 2012");
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1245,7 +1245,7 @@
             $newdue = new DateTime("February 14, 2012");
             $newical = "FREQ=MONTHLY;BYDAY=2TU;COUNT=1";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1264,7 +1264,7 @@
             $newdue = new DateTime("February 14, 2012");
             $newical = "";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart->getTimestamp(), $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1286,7 +1286,7 @@
             $newstart = 0;
             $newdue = new DateTime("May 12, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1305,7 +1305,7 @@
             $newstart = 0;
             $newdue = new DateTime("June 16, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1324,7 +1324,7 @@
             $newstart = 0;
             $newdue = new DateTime("July 4, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1343,7 +1343,7 @@
             $newstart = 0;
             $newdue = new DateTime("Dec 25, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1365,7 +1365,7 @@
             $newstart = 0;
             $newdue = new DateTime("Jan 16, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1379,7 +1379,7 @@
             $newdue = -1;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -1398,7 +1398,7 @@
             $newstart = 0;
             $newdue = new DateTime(date('Y-m-d H:i:s', strtotime('tomorrow')));            
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1415,7 +1415,7 @@
             $newdue = -1;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -1434,7 +1434,7 @@
             // Due date would be Jan. 16, 2013, but fast forward flag is true, so fast forward to tomorrow
             $newdue = new DateTime(date('Y-m-d H:i:s', strtotime('tomorrow')));            
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1453,7 +1453,7 @@
             $newdue = new DateTime("Jan 16, 2013");
             $newical = "FREQ=DAILY;FROMCOMP;COUNT=2";
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1472,7 +1472,7 @@
             $newdue = -1;
             $newical = '';
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue, $array[1] );
@@ -1492,7 +1492,7 @@
             $diff = $due->diff($newdue)->days;
             $newical = "FREQ=DAILY;FASTFORWARD;COUNT=".(1000-$diff);
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
             
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1512,7 +1512,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1532,7 +1532,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );
@@ -1552,7 +1552,7 @@
             $newstart = 0;
             $newdue = new DateTime("January 2, 2013");
 
-            $array = getNextDates($start,$due,$comp,$ical);
+            $array = rep_getNextDates($start,$due,$comp,$ical);
 
             $this->assertEquals( $newstart, $array[0] );
             $this->assertEquals( $newdue->getTimestamp(), $array[1] );

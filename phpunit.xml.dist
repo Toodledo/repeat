@@ -25,6 +25,7 @@
       <exclude>
         <file>Tests/bootstrap.php</file>
         <file>Tests/convertToRRuleTest.php</file>
+        <file>Tests/convertToToodledoTest.php</file>
         <file>Tests/getNextDaysTest.php</file>
       </exclude>
     </whitelist>
