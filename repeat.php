@@ -509,6 +509,19 @@ function rep_formatAdvanced($text) {
 	return $repeat;
 }
 
+function rep_simpleToRRule($number) {
+	if($number>=100) $number-=100;
+	if($number==1) return "FREQ=WEEKLY";
+	else if($number==2) return "FREQ=MONTHLY";
+	else if($number==3) return "FREQ=YEARLY";
+	else if($number==4) return "FREQ=DAILY";
+	else if($number==5) return "FREQ=WEEKLY;INTERVAL=2";
+	else if($number==6) return "FREQ=MONTHLY;INTERVAL=2";
+	else if($number==7) return "FREQ=MONTHLY;INTERVAL=6";
+	else if($number==8) return "FREQ=MONTHLY;INTERVAL=3";
+	else if($number==9) return "PARENT";
+}
+
 //converts advanced representations of simple repeats back to their simple counterpart
 function rep_simplifyRepeat($rep,$adv) {
 	if($rep!=50 && $rep!=150) return $rep; //already simple
