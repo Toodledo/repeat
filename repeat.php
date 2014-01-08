@@ -17,6 +17,9 @@ function rep_getNextDates($start,$due,$comp,$rrule)
 	$noNextOccur = array(-1,-1,"");
 	$today = new DateTime(date('Y-m-d H:i:s'));
 
+	if($start<=0 || $start=='0000-00-00') $start = 0;
+	if($due<=0 || $due=='0000-00-00') $due = 0;
+
 	if($start === 0 && $due === 0) {
 		$due = $today;
 	}
@@ -370,6 +373,7 @@ function rep_convertToToodledo($rrule) {
 	if(strpos($rrule,'PARENT')!==FALSE) return "With Parent";
 
 	$parts = explode(";", $rrule);
+	$freq=$interval=$byday='';
 	foreach($parts as $p) {
 		if(stristr($p, "FREQ=")!==false) $freq = str_replace("FREQ=", "", $p);
 		else if(stristr($p, "INTERVAL=")!==false) $interval = str_replace("INTERVAL=", "", $p);
@@ -571,13 +575,13 @@ function rep_format($number, $adv) {
 
 //Accepts any user input and turns it into iCal.
 //Input can be simple(repeat only), advanced (repeatA + repeat) or iCal (repeatA)
+//set enhanced=false for regular ical without our additions
 function rep_normalize($repeat,$repeatA,$enhanced=true) {
 	$fromcomp = "";
 	if($repeat>=100) {
 		if($enhanced) $fromcomp = ";FROMCOMP";
 		$repeat-=100;
 	}
-
 	//parent is special
 	if(strpos(strtolower($repeatA),'parent')!==FALSE || $repeat==9 || $repeat==109) {
 		if($enhanced) return "PARENT".$fromcomp;
@@ -588,6 +592,17 @@ function rep_normalize($repeat,$repeatA,$enhanced=true) {
 		if(!$enhanced) {
 			$repeatA = str_replace(";FROMCOMP",	"", $repeatA);
 			$repeatA = str_replace("FROMCOMP;",	"", $repeatA);
+		} else { 
+			//make sure it has fromcomp if it should or not if it shouldn't
+			//This code makes the %100 value of $repeat overwrite the FROMCOMP string in repeatA always which
+			//is necessary for subtasks repeating with parent to work correctly when the FROMCOMP differs from parent
+			//Once all repeats are converted to RRULE, we can adjust thist code by adding/removing fromcomp in the db_todo_completeSubtasks function instead
+			if(!empty($fromcomp) && strpos(strtolower($repeatA),'fromcomp')===FALSE) {
+				$repeatA .= $fromcomp; //add "FROMCOMP" if it should be there based on repeat (needed for repeat with parent to work correctly)
+			} else if(empty($fromcomp)) {
+				$repeatA = str_replace(";FROMCOMP",	"", $repeatA); //remove FROMCOMP if it shouldn't be there based on repeat (needed for repeat with parent)
+				$repeatA = str_replace("FROMCOMP;",	"", $repeatA);
+			}
 		}
 		return $repeatA;
 	

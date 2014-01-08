@@ -221,8 +221,8 @@
             $this->assertEquals("FREQ=WEEKLY;BYDAY=TU;FROMCOMP",rep_normalize(150,"every Tu"));
 
             $this->assertEquals("FREQ=DAILY",rep_normalize(50,"FREQ=DAILY"));
-            $this->assertEquals("FREQ=DAILY;FROMCOMP",rep_normalize(50,"FREQ=DAILY;FROMCOMP"));
-            $this->assertEquals("FREQ=WEEKLY;BYDAY=TU;FROMCOMP",rep_normalize(4,"FREQ=WEEKLY;BYDAY=TU;FROMCOMP"));
+            $this->assertEquals("FREQ=DAILY;FROMCOMP",rep_normalize(150,"FREQ=DAILY;FROMCOMP"));
+            $this->assertEquals("FREQ=WEEKLY;BYDAY=TU;FROMCOMP",rep_normalize(104,"FREQ=WEEKLY;BYDAY=TU;FROMCOMP"));
 
             $this->assertEquals("FREQ=DAILY",rep_normalize(60,"FREQ=DAILY"));
             $this->assertEquals("FREQ=DAILY;FROMCOMP",rep_normalize(160,"FREQ=DAILY;FROMCOMP"));
