@@ -578,15 +578,19 @@ function rep_format($number, $adv) {
 //set enhanced=false for regular ical without our additions
 function rep_normalize($repeat,$repeatA,$enhanced=true) {
 	$fromcomp = "";
-	if($repeat>=100) {
+	if($repeat>=100) { //determine if the number part is repeat from comp
 		if($enhanced) $fromcomp = ";FROMCOMP";
 		$repeat-=100;
+	} else if($repeat==50 && strpos(strtolower($repeatA),'fromcomp')!==FALSE) { //determine if the ical part has from comp
+		if($enhanced) $fromcomp = ";FROMCOMP";
 	}
+
 	//parent is special
 	if(strpos(strtolower($repeatA),'parent')!==FALSE || $repeat==9 || $repeat==109) {
 		if($enhanced) return "PARENT".$fromcomp;
 		return "";
 	}
+
 	//already in ical
 	if(strpos($repeatA,'FREQ=')!==FALSE) {
 		if(!$enhanced) {
@@ -604,6 +608,7 @@ function rep_normalize($repeat,$repeatA,$enhanced=true) {
 				$repeatA = str_replace("FROMCOMP;",	"", $repeatA);
 			}
 		}
+
 		return $repeatA;
 	
 	//old Toodledo format

@@ -232,6 +232,9 @@
             $this->assertEquals("",rep_normalize(9,"",false));
 
             $this->assertEquals("FREQ=MONTHLY;BYDAY=-1FR",rep_normalize(60,"FREQ=MONTHLY;BYDAY=-1FR"));
+
+            $this->assertEquals("FREQ=MONTHLY;INTERVAL=3;FROMCOMP",rep_normalize(50,"FREQ=MONTHLY;INTERVAL=3;FROMCOMP"));
+
         }
 
         public function testDisplay() {
