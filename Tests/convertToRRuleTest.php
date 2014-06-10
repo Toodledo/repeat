@@ -267,7 +267,7 @@
 			$converted = rep_normalize(160,"FREQ=WEEKLY;INTERVAL=2",true);
 			$this->assertEquals("FREQ=WEEKLY;INTERVAL=2;FROMCOMP", $converted );
 			$converted = rep_normalize(60,"FREQ=WEEKLY;INTERVAL=2;FROMCOMP",true);
-			$this->assertEquals("FREQ=WEEKLY;INTERVAL=2", $converted );
+			$this->assertEquals("FREQ=WEEKLY;INTERVAL=2;FROMCOMP", $converted );
 
 		}
 	}

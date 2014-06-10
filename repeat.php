@@ -581,7 +581,7 @@ function rep_normalize($repeat,$repeatA,$enhanced=true) {
 	if($repeat>=100) { //determine if the number part is repeat from comp
 		if($enhanced) $fromcomp = ";FROMCOMP";
 		$repeat-=100;
-	} else if($repeat==50 && strpos(strtolower($repeatA),'fromcomp')!==FALSE) { //determine if the ical part has from comp
+	} else if(($repeat==50 || $repeat==60) && strpos(strtolower($repeatA),'fromcomp')!==FALSE) { //determine if the ical part has from comp
 		if($enhanced) $fromcomp = ";FROMCOMP";
 	}
 
